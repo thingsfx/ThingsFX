@@ -1,5 +1,19 @@
 Welcome to the ThingsFX project!
 
+LICENSE
+=======
+
+ThingsFX is distributed under the GPL version 3. Please refer to the
+gpl-3.0.txt for the exact terms of the license.
+
+As a special exception, is allowed to link the GPL code to your application
+as a library if your application is distributed under one of the OSI
+approved licenses.
+
+A dual licensing scheme is available for use in commercial applications, if
+you are interested or you have doubts about the licensing please contact us at
+info@ladybug-studio.com
+
 Build Instrcutions
 ==================
 
