@@ -1,0 +1,7 @@
+/.settings/
+/target/
+/generated-aidl/
+/generated-res/
+/generated-src/
+.classpath
+.project
