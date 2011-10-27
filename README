@@ -1,0 +1,21 @@
+Welcome to the ThingsFX project!
+
+Build Instrcutions
+==================
+
+To build and install the project just type:
+
+$ mvn clean install
+
+on the command line.
+
+JavaFX must be in the path for maven to compiler succeed, but since there
+is no public maven repository for JavaFX you need to manually install it,
+for example:
+
+$ mvn install:install-file \
+  -Dfile=/path/to/javafx-sdk2.0.2-beta/rt/lib/jfxrt.jar \
+  -DgroupId=com.oracle.javafx -DartifactId=javafx -Dversion=2.0 \
+  -Dpackaging=jar
+
+We hope you enjoy!
