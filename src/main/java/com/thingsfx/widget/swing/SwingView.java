@@ -17,7 +17,75 @@
 
 package com.thingsfx.widget.swing;
 
-import javafx.scene.image.ImageView;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
 
-public class SwingView extends ImageView {
+import javafx.event.EventHandler;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
+
+public class SwingView extends BufferedImageView {
+    
+    private JComponent component;
+    public SwingView(JComponent component) {
+        
+        RepaintManager repaintManager = RepaintManager.currentManager(component);
+        if (!(repaintManager instanceof ThingsFXRepaintManager)) {
+            throw new IllegalStateException("SwingFX.init() method must be " +
+                                            "called before any Swing rendering" +
+                                            "and any JavaFX routine call");
+        }
+        
+        ((ThingsFXRepaintManager) repaintManager).registerListener(this, component);
+        
+        registerEvents();
+
+        this.component = component;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                SwingView.this.component.addNotify();
+                SwingView.this.component.setVisible(true);
+                SwingView.this.component.setDoubleBuffered(true);
+                SwingView.this.component.repaint();
+            }
+        });
+    }
+
+    private void registerEvents() {
+        // ah, I can do infinite nesting here :)
+        setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(final javafx.scene.input.MouseEvent event) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.err.println("###################");
+                        if (SwingView.this.component instanceof JButton) {
+                            JButton jbutton = (JButton) component;
+                            jbutton.doClick();
+                        }
+
+//                        EventQueue eventQueue =
+//                                Toolkit.getDefaultToolkit().getSystemEventQueue();
+//                        MouseEvent awtEvent = new MouseEvent(component,
+//                                                             MouseEvent.MOUSE_CLICKED,
+//                                                             System.currentTimeMillis(),
+//                                                             MouseEvent.BUTTON1_DOWN_MASK,
+//                                                             (int) event.getSceneX(),
+//                                                             (int) event.getSceneY(),
+//                                                             event.getClickCount(), false);
+//                        eventQueue.postEvent(awtEvent);
+                        //component.invalidate();
+                        //component.repaint();
+                    }
+                });
+            }
+        });
+    }
 }
