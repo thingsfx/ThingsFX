@@ -35,6 +35,7 @@ public class BufferedImageView extends ImageView {
     
     public void paintImage(BufferedImage backBuffer) {
         try {
+            System.err.println("here!");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(backBuffer, "png", os);
             InputStream is = new ByteArrayInputStream(os.toByteArray());

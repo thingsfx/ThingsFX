@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
@@ -65,6 +66,9 @@ class ThingsFXRepaintManager extends RepaintManager {
                 Graphics g = backBuffer.getGraphics();
                 component.paint(g);
                 g.dispose();
+                
+                if (component instanceof JButton && component.isVisible())
+                    System.err.println("component: " + component);
                 
                 listeners.get(component).paintImage((BufferedImage) backBuffer);
             }

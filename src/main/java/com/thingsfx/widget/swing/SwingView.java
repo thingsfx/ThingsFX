@@ -43,9 +43,10 @@ public class SwingView extends BufferedImageView {
         
         ((ThingsFXRepaintManager) repaintManager).registerListener(this, component);
         
+        this.component = component;
+
         registerEvents();
 
-        this.component = component;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -68,7 +69,7 @@ public class SwingView extends BufferedImageView {
                         System.err.println("###################");
                         if (SwingView.this.component instanceof JButton) {
                             JButton jbutton = (JButton) component;
-                            jbutton.doClick();
+                            jbutton.doClick(10);
                         }
 
 //                        EventQueue eventQueue =
