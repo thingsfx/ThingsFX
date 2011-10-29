@@ -66,21 +66,31 @@ public class SimpleSwingFXApplication {
         Scene scene = new Scene(root, 200, 50, Color.BLACK);
         fxPanel.setScene(scene);
         
-        HBox hbox = new HBox();
+        final HBox hbox = new HBox();
         hbox.setPadding(new Insets(10, 10, 10, 10));
         hbox.setSpacing(10);
 
         Button fxButton = new Button("FX Button");
         fxButton.setPrefSize(100, 20);
 
-        // TODO: this should go in the EDT
-        JButton jbutton = new JButton("JButton");
-        jbutton.setPreferredSize(new Dimension(100, 20));
-        jbutton.setSize(new Dimension(100, 20));
+        hbox.getChildren().addAll(fxButton);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final JButton jbutton = new JButton("JButton");
+                jbutton.setPreferredSize(new Dimension(100, 20));
+                jbutton.setSize(new Dimension(100, 20));
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        SwingView swingViewButton = new SwingView(jbutton);
+                        hbox.getChildren().add(swingViewButton);
+                    }
+                });
+            }
+        });
         
-        SwingView swingViewButton = new SwingView(jbutton);
-        
-        hbox.getChildren().addAll(fxButton, swingViewButton);
 
         root.getChildren().add(hbox);   
     }
