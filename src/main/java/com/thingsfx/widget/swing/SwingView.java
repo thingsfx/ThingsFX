@@ -17,14 +17,10 @@
 
 package com.thingsfx.widget.swing;
 
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
 import javafx.event.EventHandler;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
@@ -44,7 +40,7 @@ public class SwingView extends BufferedImageView {
         ((ThingsFXRepaintManager) repaintManager).registerListener(this, component);
         
         this.component = component;
-
+        
         registerEvents();
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -57,36 +53,58 @@ public class SwingView extends BufferedImageView {
             }
         });
     }
-
+    
     private void registerEvents() {
         // ah, I can do infinite nesting here :)
-        setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
+        // TODO: factor those methods out into a single one
+        setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(final javafx.scene.input.MouseEvent event) {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        System.err.println("###################");
-                        if (SwingView.this.component instanceof JButton) {
-                            JButton jbutton = (JButton) component;
-                            jbutton.doClick(10);
-                        }
 
-//                        EventQueue eventQueue =
-//                                Toolkit.getDefaultToolkit().getSystemEventQueue();
-//                        MouseEvent awtEvent = new MouseEvent(component,
-//                                                             MouseEvent.MOUSE_CLICKED,
-//                                                             System.currentTimeMillis(),
-//                                                             MouseEvent.BUTTON1_DOWN_MASK,
-//                                                             (int) event.getSceneX(),
-//                                                             (int) event.getSceneY(),
-//                                                             event.getClickCount(), false);
-//                        eventQueue.postEvent(awtEvent);
-                        //component.invalidate();
-                        //component.repaint();
+                        MouseEvent awtEvent =
+                                new MouseEvent(component,
+                                               MouseEvent.MOUSE_PRESSED,
+                                               System.currentTimeMillis(),
+                                               MouseEvent.BUTTON1_DOWN_MASK,
+                                               (int) event.getX(),
+                                               (int) event.getY(),
+                                               (int) event.getScreenX(),
+                                               (int) event.getScreenY(),
+                                               event.getClickCount(), false,
+                                               MouseEvent.BUTTON1);
+                        
+                        SwingFXEventDispatcher.dispatchMouseEvent(awtEvent, component);
                     }
                 });
             }
         });
+        
+        setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(final javafx.scene.input.MouseEvent event) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        
+                        MouseEvent awtEvent =
+                                new MouseEvent(component,
+                                               MouseEvent.MOUSE_RELEASED,
+                                               System.currentTimeMillis(),
+                                               MouseEvent.BUTTON1_DOWN_MASK,
+                                               (int) event.getX(),
+                                               (int) event.getY(),
+                                               (int) event.getScreenX(),
+                                               (int) event.getScreenY(),
+                                               event.getClickCount(), false,
+                                               MouseEvent.BUTTON1);
+
+                        SwingFXEventDispatcher.dispatchMouseEvent(awtEvent, component);
+                    }
+                });
+            }
+        }); 
     }
 }

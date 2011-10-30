@@ -34,5 +34,4 @@ public class SwingFX {
         System.setProperty("swing.volatileImageBufferEnabled", "false");
         RepaintManager.setCurrentManager(new ThingsFXRepaintManager());
     }
-    
 }

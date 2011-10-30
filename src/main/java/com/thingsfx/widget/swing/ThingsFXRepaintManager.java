@@ -18,6 +18,7 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -27,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
@@ -50,7 +50,13 @@ class ThingsFXRepaintManager extends RepaintManager {
         
         super.addDirtyRegion(c, x, y, w, h);
         if (listeners.containsKey(c)) {
+            
             trackedComponents.add(c);
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    paintDirtyRegions();
+                }
+            });
         }
     }
     
@@ -66,9 +72,6 @@ class ThingsFXRepaintManager extends RepaintManager {
                 Graphics g = backBuffer.getGraphics();
                 component.paint(g);
                 g.dispose();
-                
-                if (component instanceof JButton && component.isVisible())
-                    System.err.println("component: " + component);
                 
                 listeners.get(component).paintImage((BufferedImage) backBuffer);
             }

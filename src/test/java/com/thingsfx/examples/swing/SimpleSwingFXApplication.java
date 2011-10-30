@@ -29,11 +29,11 @@ public class SimpleSwingFXApplication {
             @Override
             public void run() {
                 
-                try {
-                    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 
                 SimpleSwingFXApplication login = new SimpleSwingFXApplication();
                 login.initAndShowGUI();
