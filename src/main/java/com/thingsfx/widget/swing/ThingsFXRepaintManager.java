@@ -18,6 +18,7 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -39,7 +40,7 @@ class ThingsFXRepaintManager extends RepaintManager {
     private WeakHashMap<Component, BufferedImage> map =
             new WeakHashMap<Component, BufferedImage>();
 
-    private Set<JComponent> trackedComponents = new CopyOnWriteArraySet<JComponent>();
+    private Set<Container> trackedComponents = new CopyOnWriteArraySet<Container>();
 
     public ThingsFXRepaintManager() {
         setDoubleBufferingEnabled(true);
@@ -49,8 +50,16 @@ class ThingsFXRepaintManager extends RepaintManager {
     public void addDirtyRegion(JComponent c, int x, int y, int w, int h) {
         
         super.addDirtyRegion(c, x, y, w, h);
-        if (listeners.containsKey(c)) {
-            
+        Container container = c;
+        boolean found = false;
+        do {
+            found = rapaintHierarchy(container);
+        } while (!found && (container = container.getParent()) != null);
+    }
+    
+    private boolean rapaintHierarchy(Container c) {        
+        boolean found = listeners.containsKey(c);
+        if (found) {
             trackedComponents.add(c);
             EventQueue.invokeLater(new Runnable() {
                 public void run() {
@@ -58,6 +67,7 @@ class ThingsFXRepaintManager extends RepaintManager {
                 }
             });
         }
+        return found;
     }
     
     @Override
@@ -65,10 +75,10 @@ class ThingsFXRepaintManager extends RepaintManager {
         
         super.paintDirtyRegions();
         
-        for (JComponent component : trackedComponents) {
+        for (Container component : trackedComponents) {
             if (component.isDoubleBuffered() && listeners.containsKey(component)) {
-                Image backBuffer = getOffscreenBuffer(component, component.getWidth(),
-                                                      component.getHeight());
+                Image backBuffer = getBuffer(component, component.getWidth(),
+                                             component.getHeight());
                 Graphics g = backBuffer.getGraphics();
                 component.paint(g);
                 g.dispose();
@@ -79,8 +89,7 @@ class ThingsFXRepaintManager extends RepaintManager {
         trackedComponents.clear();
     }
     
-    @Override
-    public Image getOffscreenBuffer(Component c, int proposedWidth, int proposedHeight) {
+    private Image getBuffer(Component c, int proposedWidth, int proposedHeight) {
        
         // TODO: check the size of the component as well
         if (!map.containsKey(c)) {
@@ -91,11 +100,6 @@ class ThingsFXRepaintManager extends RepaintManager {
         return map.get(c);
     }
 
-    public Image getVolatileOffscreenBuffer(Component c, int proposedWidth,
-                                            int proposedHeight) {
-        return getOffscreenBuffer(c, proposedWidth, proposedHeight);
-    }
-    
     void registerListener(SwingView view, JComponent component) {
         this.listeners.put(component, view);
     }
