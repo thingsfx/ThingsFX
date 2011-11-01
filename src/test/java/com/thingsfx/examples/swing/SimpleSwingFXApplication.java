@@ -1,6 +1,8 @@
 package com.thingsfx.examples.swing;
 
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -9,12 +11,15 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+//import javax.swing.UIManager;
 
 import com.thingsfx.widget.swing.SwingFX;
 import com.thingsfx.widget.swing.SwingView;
@@ -44,7 +49,7 @@ public class SimpleSwingFXApplication {
     protected void initAndShowGUI() {
         JFrame frame = new JFrame("SimpleSwingFXApplication");
         
-        frame.setMinimumSize(new Dimension(300, 100));
+        frame.setMinimumSize(new Dimension(300, 300));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         final JFXPanel fxPanel = new JFXPanel();
@@ -62,10 +67,10 @@ public class SimpleSwingFXApplication {
     
     private void initFX(JFXPanel fxPanel) {
         Group root = new Group();
-        Scene scene = new Scene(root, 200, 50, Color.BLACK);
+        Scene scene = new Scene(root, 300, 300, Color.BLACK);
         fxPanel.setScene(scene);
         
-        final HBox hbox = new HBox();
+        final VBox hbox = new VBox();
         hbox.setPadding(new Insets(10, 10, 10, 10));
         hbox.setSpacing(10);
 
@@ -77,13 +82,37 @@ public class SimpleSwingFXApplication {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final JButton jbutton = new JButton("JButton");
-                jbutton.setPreferredSize(new Dimension(100, 20));
-                jbutton.setSize(new Dimension(100, 20));
+                
+                final JPanel swingPane = new JPanel();
+                swingPane.setLayout(new GridLayout(3, 1));
+                
+                final JButton jbutton1 = new JButton("JButton1");
+                jbutton1.setMinimumSize(new Dimension(100, 30));
+                jbutton1.setPreferredSize(new Dimension(100, 30));
+                jbutton1.setSize(new Dimension(100, 30));
+                
+                JButton jbutton2 = new JButton("JButton2");
+                jbutton2.setMinimumSize(new Dimension(100, 30));
+                jbutton2.setPreferredSize(new Dimension(100, 30));
+                jbutton2.setSize(new Dimension(100, 30));
+                
+                JTextField textField = new JTextField();
+                textField.setMinimumSize(new Dimension(100, 30));
+                textField.setPreferredSize(new Dimension(100, 30));
+                textField.setSize(new Dimension(100, 30));
+                
+                swingPane.add(jbutton1);
+                swingPane.add(jbutton2);
+                swingPane.add(textField);
+                
+                swingPane.setSize(swingPane.getPreferredSize());
+                
+                swingPane.setVisible(true);
+                
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        SwingView swingViewButton = new SwingView(jbutton);
+                        SwingView swingViewButton = new SwingView(swingPane);
                         hbox.getChildren().add(swingViewButton);
                     }
                 });
