@@ -1,3 +1,20 @@
+/*
+ * This file is part of ThingsFX.
+ *
+ * ThingsFX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ThingsFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ThingsFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.thingsfx.widget.swing;
 
 import java.awt.AWTEvent;
@@ -20,16 +37,9 @@ public class SwingFXEventDispatcher {
     private static Method dispatchMethod;
     private static Method enableEvents;
 
-    private static Method processMouseEventMethod;
-
-    // grab this idea and the following two methods from CacioCavallo
+    // grab this idea from CacioCavallo
     static void initReflection() {
         try {
-            Class<?> componentCls = Class.forName("java.awt.Component");
-            processMouseEventMethod =
-                    componentCls.getDeclaredMethod("processMouseEvent",
-                                                    new Class[] {MouseEvent.class});
-            processMouseEventMethod.setAccessible(true);
             
             // lightweight dispatcher
             dispatcherField = Container.class.getDeclaredField("dispatcher");
@@ -70,20 +80,6 @@ public class SwingFXEventDispatcher {
         }
     }
     
-    static void dispatchMouseEvent(MouseEvent e, JComponent component) {
-        if (processMouseEventMethod == null) {
-            initReflection();
-        }
-        try {
-            processMouseEventMethod.invoke(component, e);
-            
-        } catch (Exception ex) {
-            InternalError err = new InternalError();
-            err.initCause(ex);
-            throw err;
-        }
-    }
-
     /**
      * Performs lightweight dispatching for the specified event on this window.
      * This only calls the lightweight dispatcher. We cannot simply
@@ -93,7 +89,7 @@ public class SwingFXEventDispatcher {
      *
      * @param e the event to be dispatched
      */
-    public static void dispatchEvent(AWTEvent awtEvent, JComponent component) {
+    static void dispatchEvent(AWTEvent awtEvent, JComponent component) {
 
             if (dispatcherField == null) {
                 initReflection();
