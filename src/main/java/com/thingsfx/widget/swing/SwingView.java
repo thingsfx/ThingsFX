@@ -46,10 +46,15 @@ public class SwingView extends BufferedImageView {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                SwingView.this.component.addNotify();
-                SwingView.this.component.setVisible(true);
-                SwingView.this.component.setDoubleBuffered(true);
-                SwingView.this.component.repaint();
+                
+                JComponent component = SwingView.this.component;
+                
+                component.addNotify();
+                SwingFXEventDispatcher.setLightweightDispatcher(component);                
+                component.setVisible(true);
+                component.setDoubleBuffered(true);
+                component.doLayout();
+                component.repaint();
             }
         });
     }
@@ -68,15 +73,14 @@ public class SwingView extends BufferedImageView {
                                 new MouseEvent(component,
                                                MouseEvent.MOUSE_PRESSED,
                                                System.currentTimeMillis(),
-                                               MouseEvent.BUTTON1_DOWN_MASK,
+                                               MouseEvent.BUTTON1_MASK,
                                                (int) event.getX(),
                                                (int) event.getY(),
                                                (int) event.getScreenX(),
                                                (int) event.getScreenY(),
                                                event.getClickCount(), false,
                                                MouseEvent.BUTTON1);
-                        
-                        SwingFXEventDispatcher.dispatchMouseEvent(awtEvent, component);
+                        SwingFXEventDispatcher.dispatchEvent(awtEvent, component);
                     }
                 });
             }
@@ -93,15 +97,14 @@ public class SwingView extends BufferedImageView {
                                 new MouseEvent(component,
                                                MouseEvent.MOUSE_RELEASED,
                                                System.currentTimeMillis(),
-                                               MouseEvent.BUTTON1_DOWN_MASK,
+                                               MouseEvent.BUTTON1_MASK,
                                                (int) event.getX(),
                                                (int) event.getY(),
                                                (int) event.getScreenX(),
                                                (int) event.getScreenY(),
                                                event.getClickCount(), false,
                                                MouseEvent.BUTTON1);
-
-                        SwingFXEventDispatcher.dispatchMouseEvent(awtEvent, component);
+                        SwingFXEventDispatcher.dispatchEvent(awtEvent, component);
                     }
                 });
             }
