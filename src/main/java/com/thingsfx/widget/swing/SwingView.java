@@ -18,16 +18,102 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.scene.input.MouseButton;
 
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
 public class SwingView extends BufferedImageView {
-    
-    private JComponent component;
+
+	private static final Map<EventType<?>,Integer> mouseEventMap;
+	static {
+		Map<EventType<?>,Integer> map = new HashMap<EventType<?>,Integer>();
+		map.put(javafx.scene.input.MouseEvent.MOUSE_PRESSED, MouseEvent.MOUSE_PRESSED);
+		map.put(javafx.scene.input.MouseEvent.MOUSE_RELEASED, MouseEvent.MOUSE_PRESSED);
+		map.put(javafx.scene.input.MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_ENTERED);
+		map.put(javafx.scene.input.MouseEvent.MOUSE_EXITED, MouseEvent.MOUSE_EXITED);
+		map.put(javafx.scene.input.MouseEvent.MOUSE_MOVED, MouseEvent.MOUSE_MOVED);
+		mouseEventMap = Collections.unmodifiableMap(map);
+	}
+
+	private class MouseEventHandler implements EventHandler<javafx.scene.input.MouseEvent> {
+
+		@Override
+		public void handle(javafx.scene.input.MouseEvent jfxMouseEvent) {
+			EventType<?> type = jfxMouseEvent.getEventType();
+			int id = mouseEventMap.get(type);
+			int button = getAWTButton(jfxMouseEvent.getButton());
+			int modifiers = getAWTModifiers(jfxMouseEvent);
+            final MouseEvent awtEvent =
+                    new MouseEvent(component,
+                                   id,
+                                   System.currentTimeMillis(),
+                                   modifiers,
+                                   (int) jfxMouseEvent.getX(),
+                                   (int) jfxMouseEvent.getY(),
+                                   (int) jfxMouseEvent.getScreenX(),
+                                   (int) jfxMouseEvent.getScreenY(),
+                                   jfxMouseEvent.getClickCount(), false,
+                                   button);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    SwingFXEventDispatcher.dispatchEvent(awtEvent, component);
+                }
+            });
+		}
+
+		private int getAWTModifiers(javafx.scene.input.MouseEvent jfxMouseEvent) {
+			int mods = 0;
+			if (jfxMouseEvent.isAltDown()) {
+				mods |= MouseEvent.ALT_MASK | MouseEvent.ALT_DOWN_MASK;
+			}
+			if (jfxMouseEvent.isControlDown()) {
+				mods |= MouseEvent.CTRL_MASK | MouseEvent.CTRL_DOWN_MASK;
+			}
+			if (jfxMouseEvent.isShiftDown()) {
+				mods |= MouseEvent.SHIFT_MASK | MouseEvent.SHIFT_DOWN_MASK;
+			}
+			if (jfxMouseEvent.isMetaDown()) {
+				mods |= MouseEvent.META_MASK | MouseEvent.META_DOWN_MASK;
+			}
+			if (jfxMouseEvent.isPrimaryButtonDown()) {
+				mods |= MouseEvent.BUTTON1_MASK | MouseEvent.BUTTON1_DOWN_MASK;
+			}
+			if (jfxMouseEvent.isSecondaryButtonDown()) {
+				mods |= MouseEvent.BUTTON2_MASK | MouseEvent.BUTTON2_DOWN_MASK;
+			}
+			if (jfxMouseEvent.isMiddleButtonDown()) {
+				mods |= MouseEvent.BUTTON3_MASK | MouseEvent.BUTTON3_DOWN_MASK;
+			}
+			
+			return mods;
+		}
+
+		private int getAWTButton(MouseButton button) {
+			switch (button) {
+			case PRIMARY:
+				return MouseEvent.BUTTON1;
+			case SECONDARY:
+				return MouseEvent.BUTTON2;
+			case MIDDLE:
+				return MouseEvent.BUTTON3;
+			case NONE:
+		    default:
+				return MouseEvent.NOBUTTON;
+			}
+		}
+	}
+
+	private JComponent component;
     public SwingView(JComponent component) {
         
         RepaintManager repaintManager = RepaintManager.currentManager(component);
@@ -62,30 +148,36 @@ public class SwingView extends BufferedImageView {
     private void registerEvents() {
         // ah, I can do infinite nesting here :)
         // TODO: factor those methods out into a single one
-        setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(final javafx.scene.input.MouseEvent event) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
+    	MouseEventHandler handler = new MouseEventHandler(); 
+    	setOnMousePressed(handler);
+    	setOnMouseReleased(handler);
+    	setOnMouseMoved(handler);
+    	setOnMouseEntered(handler);
+    	setOnMouseExited(handler);
+    	//        setOnMousePressed(new MouseEventHandler()) ;new EventHandler<javafx.scene.input.MouseEvent>() {
+//            @Override
+//            public void handle(final javafx.scene.input.MouseEvent event) {
+//                SwingUtilities.invokeLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                        MouseEvent awtEvent =
+//                                new MouseEvent(component,
+//                                               MouseEvent.MOUSE_PRESSED,
+//                                               System.currentTimeMillis(),
+//                                               MouseEvent.BUTTON1_MASK,
+//                                               (int) event.getX(),
+//                                               (int) event.getY(),
+//                                               (int) event.getScreenX(),
+//                                               (int) event.getScreenY(),
+//                                               event.getClickCount(), false,
+//                                               MouseEvent.BUTTON1);
+//                        SwingFXEventDispatcher.dispatchEvent(awtEvent, component);
+//                    }
+//                });
+//            }
+//        });
 
-                        MouseEvent awtEvent =
-                                new MouseEvent(component,
-                                               MouseEvent.MOUSE_PRESSED,
-                                               System.currentTimeMillis(),
-                                               MouseEvent.BUTTON1_MASK,
-                                               (int) event.getX(),
-                                               (int) event.getY(),
-                                               (int) event.getScreenX(),
-                                               (int) event.getScreenY(),
-                                               event.getClickCount(), false,
-                                               MouseEvent.BUTTON1);
-                        SwingFXEventDispatcher.dispatchEvent(awtEvent, component);
-                    }
-                });
-            }
-        });
-        
         setOnMouseReleased(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(final javafx.scene.input.MouseEvent event) {
