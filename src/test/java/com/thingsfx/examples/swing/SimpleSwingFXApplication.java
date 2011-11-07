@@ -1,7 +1,6 @@
 package com.thingsfx.examples.swing;
 
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javafx.application.Platform;
@@ -10,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -19,8 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-//import javax.swing.UIManager;
 
 import com.thingsfx.widget.swing.SwingFX;
 import com.thingsfx.widget.swing.SwingView;
