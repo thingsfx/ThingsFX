@@ -31,7 +31,6 @@ public class SwingFX {
      * by {@link SwingView}.
      */
     public static void init() {
-        System.setProperty("swing.volatileImageBufferEnabled", "false");
         RepaintManager.setCurrentManager(new ThingsFXRepaintManager());
     }
 }
