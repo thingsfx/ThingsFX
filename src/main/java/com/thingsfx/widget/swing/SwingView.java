@@ -17,6 +17,7 @@
 
 package com.thingsfx.widget.swing;
 
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.HashMap;
@@ -134,13 +135,17 @@ public class SwingView extends BufferedImageView {
             public void run() {
                 
                 JComponent component = SwingView.this.component;
-                
                 component.addNotify();
+                
+                
                 SwingFXEventDispatcher.setLightweightDispatcher(component);                
                 component.setVisible(true);
                 component.setDoubleBuffered(true);
                 component.doLayout();
                 component.repaint();
+                
+                ProxyWindow proxy = new ProxyWindow(SwingView.this);
+                proxy.add(component);
             }
         });
     }
@@ -201,5 +206,9 @@ public class SwingView extends BufferedImageView {
                 });
             }
         }); 
+    }
+
+    Component getComponent() {
+        return component;
     }
 }

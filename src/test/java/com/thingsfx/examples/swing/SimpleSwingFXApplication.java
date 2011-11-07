@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 //import javax.swing.UIManager;
 
 import com.thingsfx.widget.swing.SwingFX;
@@ -84,7 +85,7 @@ public class SimpleSwingFXApplication {
             public void run() {
                 
                 final JPanel swingPane = new JPanel();
-                swingPane.setLayout(new GridLayout(3, 1));
+                swingPane.setLayout(new GridLayout(4, 1));
                 
                 final JButton jbutton1 = new JButton("JButton1");
                 jbutton1.setMinimumSize(new Dimension(100, 30));
@@ -100,10 +101,17 @@ public class SimpleSwingFXApplication {
                 textField.setMinimumSize(new Dimension(100, 30));
                 textField.setPreferredSize(new Dimension(100, 30));
                 textField.setSize(new Dimension(100, 30));
+                textField.setText("I lost focus!");
                 
+                JTextField textField2 = new JTextField();
+                textField2.setMinimumSize(new Dimension(100, 30));
+                textField2.setPreferredSize(new Dimension(100, 30));
+                textField2.setSize(new Dimension(100, 30));
+                textField2.setText("I have focus!");
                 swingPane.add(jbutton1);
                 swingPane.add(jbutton2);
                 swingPane.add(textField);
+                swingPane.add(textField2);
                 
                 swingPane.setSize(swingPane.getPreferredSize());
                 

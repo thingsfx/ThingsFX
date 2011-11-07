@@ -33,6 +33,12 @@ import javax.imageio.ImageIO;
  */
 public class BufferedImageView extends ImageView {
     
+    public BufferedImageView() { /* nothing to do */}
+    
+    public BufferedImageView(BufferedImage image) {
+        paintImage(image);
+    }
+    
     public void paintImage(BufferedImage backBuffer) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
