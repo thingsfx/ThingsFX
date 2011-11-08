@@ -51,6 +51,9 @@ class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
     @Override
     public void setCurrentFocusOwner(Component comp) {
         currentFocusOwner = comp;
+        if (currentFocusOwner instanceof ProxyWindow) {
+            ((ProxyWindow) currentFocusOwner).getProxyView().requestFocus();
+        }
     }
 
     /**
@@ -79,6 +82,9 @@ class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
 
     public void setCurrentFocusedWindow(Window w) {
         currentFocusedWindow = w;
+        if (currentFocusedWindow instanceof ProxyWindow) {
+            ((ProxyWindow) currentFocusedWindow).getProxyView().requestFocus();
+        }
     }
 
     boolean requestFocus(Component target, Component lightweightChild, boolean temporary,

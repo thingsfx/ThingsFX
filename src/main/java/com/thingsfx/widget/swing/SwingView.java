@@ -18,11 +18,15 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Group;
@@ -168,6 +172,17 @@ public class SwingView extends Group {
         setOnMouseMoved(handler);
         setOnMouseEntered(handler);
         setOnMouseExited(handler);
+        focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0,
+                    Boolean oldValue, Boolean newValue) {
+                if (newValue == Boolean.FALSE) {
+                    FocusEvent fl = new FocusEvent(component, FocusEvent.FOCUS_LOST);
+                    Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(fl);
+                }
+            }
+        });
     }
 
     Component getComponent() {

@@ -48,4 +48,8 @@ class ProxyWindow extends Frame {
     public boolean isFocusTraversable() {
         return proxyView.isFocusTraversable();
     }
+
+    SwingView getProxyView() {
+        return proxyView;
+    }
 }
