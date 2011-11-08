@@ -80,10 +80,15 @@ class KFMHelper {
                               CausedFocusEvent.Cause.class
             };
 
-            shouldNativelyFocusHeavyweightMethod =
-                SunToolkit.getMethod(KeyboardFocusManager.class,
-                                   "shouldNativelyFocusHeavyweight",
-                                   arg_types);
+            try {
+				shouldNativelyFocusHeavyweightMethod = KeyboardFocusManager.class.getDeclaredMethod("shouldNativelyFocusHeavyweight",
+				                       arg_types);
+				shouldNativelyFocusHeavyweightMethod.setAccessible(true);
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
         }
         Object[] args = new Object[] { heavyweight,
                                        descendant,
