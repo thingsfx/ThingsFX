@@ -26,36 +26,28 @@ import javax.swing.RepaintManager;
 
 /**
  * Helper class for {@link SwingView}. The purpouse of this class is to
- * initialize the special {@link RepaintManager} needed to hook Swing
- * components into JavaFX views.
+ * initialize the special {@link RepaintManager} needed to hook Swing components
+ * into JavaFX views.
  */
 public class SwingFX {
-   
+
     /**
-     * Initializes and install the {@link RepaintManager} needed
-     * by {@link SwingView}.
+     * Initializes and install the {@link RepaintManager} needed by
+     * {@link SwingView}.
      */
     public static void init() {
-    	new JFXPanel(); // needed as a trick to launch it on a mac
-    	Class kfmCls = KeyboardFocusManager.class;
-    	Field peer;
-		try {
-			peer = kfmCls.getDeclaredField("peer");
-	    	peer.setAccessible(true);
-	    	peer.set(KeyboardFocusManager.getCurrentKeyboardFocusManager(), FXSwingKeyboardFocusManagerPeer.getInstance());
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        new JFXPanel(); // needed as a trick to launch it on a mac
+        Class<KeyboardFocusManager> kfmCls = KeyboardFocusManager.class;
+        Field peer;
+        try {
+            peer = kfmCls.getDeclaredField("peer");
+            peer.setAccessible(true);
+            peer.set(KeyboardFocusManager.getCurrentKeyboardFocusManager(),
+                     FXSwingKeyboardFocusManagerPeer.getInstance());
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         RepaintManager.setCurrentManager(new ThingsFXRepaintManager());
     }
 }
