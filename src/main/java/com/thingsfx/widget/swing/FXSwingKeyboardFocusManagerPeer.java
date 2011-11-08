@@ -77,7 +77,7 @@ class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
         // TODO: Implement.
     }
 
-    void setCurrentFocusedWindow(Window w) {
+    public void setCurrentFocusedWindow(Window w) {
         currentFocusedWindow = w;
     }
 
