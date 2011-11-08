@@ -39,7 +39,7 @@ public class SwingView extends BufferedImageView {
         map.put(javafx.scene.input.MouseEvent.MOUSE_PRESSED,
                 MouseEvent.MOUSE_PRESSED);
         map.put(javafx.scene.input.MouseEvent.MOUSE_RELEASED,
-                MouseEvent.MOUSE_PRESSED);
+                MouseEvent.MOUSE_RELEASED);
         map.put(javafx.scene.input.MouseEvent.MOUSE_ENTERED,
                 MouseEvent.MOUSE_ENTERED);
         map.put(javafx.scene.input.MouseEvent.MOUSE_EXITED,
@@ -58,12 +58,16 @@ public class SwingView extends BufferedImageView {
             int id = mouseEventMap.get(type);
             int button = getAWTButton(jfxMouseEvent.getButton());
             int modifiers = getAWTModifiers(jfxMouseEvent);
-            final MouseEvent awtEvent = new MouseEvent(component, id,
-                    System.currentTimeMillis(), modifiers,
-                    (int) jfxMouseEvent.getX(), (int) jfxMouseEvent.getY(),
-                    (int) jfxMouseEvent.getScreenX(),
-                    (int) jfxMouseEvent.getScreenY(),
-                    jfxMouseEvent.getClickCount(), false, button);
+            final MouseEvent awtEvent =
+                    new MouseEvent(component, id, System.currentTimeMillis(),
+                                   modifiers,
+                                   (int) jfxMouseEvent.getX(),
+                                   (int) jfxMouseEvent.getY(),
+                                   (int) jfxMouseEvent.getScreenX(),
+                                   (int) jfxMouseEvent.getScreenY(),
+                                   jfxMouseEvent.getClickCount(),
+                                   false,
+                                   button);
 
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
@@ -154,15 +158,12 @@ public class SwingView extends BufferedImageView {
     }
 
     private void registerEvents() {
-        // ah, I can do infinite nesting here :)
-        // TODO: factor those methods out into a single one
         MouseEventHandler handler = new MouseEventHandler();
         setOnMousePressed(handler);
         setOnMouseReleased(handler);
         setOnMouseMoved(handler);
         setOnMouseEntered(handler);
         setOnMouseExited(handler);
-
     }
 
     Component getComponent() {
