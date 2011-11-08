@@ -20,6 +20,8 @@ package com.thingsfx.widget.swing;
 import java.awt.KeyboardFocusManager;
 import java.lang.reflect.Field;
 
+import javafx.embed.swing.JFXPanel;
+
 import javax.swing.RepaintManager;
 
 /**
@@ -34,6 +36,7 @@ public class SwingFX {
      * by {@link SwingView}.
      */
     public static void init() {
+    	new JFXPanel(); // needed as a trick to launch it on a mac
     	Class kfmCls = KeyboardFocusManager.class;
     	Field peer;
 		try {
