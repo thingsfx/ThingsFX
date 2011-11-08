@@ -25,13 +25,14 @@ import java.util.Map;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
-public class SwingView extends BufferedImageView {
+public class SwingView extends Group {
 
     private static final Map<EventType<?>, Integer> mouseEventMap;
     static {
@@ -121,8 +122,12 @@ public class SwingView extends BufferedImageView {
 
     private JComponent component;
 
+    private BufferedImageView imgView;
+
     public SwingView(JComponent component) {
 
+    	imgView = new BufferedImageView();
+    	getChildren().add(imgView);
         RepaintManager repaintManager = RepaintManager
                 .currentManager(component);
         if (!(repaintManager instanceof ThingsFXRepaintManager)) {
@@ -167,5 +172,9 @@ public class SwingView extends BufferedImageView {
 
     Component getComponent() {
         return component;
+    }
+
+    BufferedImageView getImageView() {
+    	return imgView;
     }
 }

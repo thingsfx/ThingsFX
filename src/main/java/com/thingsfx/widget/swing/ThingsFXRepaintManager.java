@@ -83,7 +83,7 @@ class ThingsFXRepaintManager extends RepaintManager {
                 component.paint(g);
                 g.dispose();
                 
-                listeners.get(component).paintImage((BufferedImage) backBuffer);
+                listeners.get(component).getImageView().paintImage((BufferedImage) backBuffer);
             }
         }
         trackedComponents.clear();
