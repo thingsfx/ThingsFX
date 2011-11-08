@@ -1,75 +1,44 @@
 package com.thingsfx.examples.swing;
 
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-//import javax.swing.UIManager;
 
 import com.thingsfx.widget.swing.SwingFX;
 import com.thingsfx.widget.swing.SwingView;
 
-public class SimpleSwingFXApplication {
+public class SimpleSwingFXApplication extends Application {
     
     public static void main(String[] args) {
-        
         SwingFX.init();
-        
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                
-//                try {
-//                    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-                
-                SimpleSwingFXApplication login = new SimpleSwingFXApplication();
-                login.initAndShowGUI();
-            }
-        });
+        launch(args);
     }
 
-    protected void initAndShowGUI() {
-        JFrame frame = new JFrame("SimpleSwingFXApplication");
-        
-        frame.setMinimumSize(new Dimension(300, 300));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        final JFXPanel fxPanel = new JFXPanel();
-        frame.add(fxPanel);
-        frame.setVisible(true);
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                initFX(fxPanel);
-            }
-
-       });
+    public void start(Stage stage) {        
+    	initFX(stage);
+        stage.show();
     }
-    
-    private void initFX(JFXPanel fxPanel) {
+
+    private void initFX(Stage stage) {
         Group root = new Group();
         Scene scene = new Scene(root, 300, 300, Color.BLACK);
-        fxPanel.setScene(scene);
+        stage.setScene(scene);
         
         final VBox hbox = new VBox();
         hbox.setPadding(new Insets(10, 10, 10, 10));
