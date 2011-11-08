@@ -32,36 +32,36 @@ import sun.java2d.pipe.Region;
 
 class ProxyWindowPeer implements FramePeer {
 
-	private ProxyWindow window;
+    private ProxyWindow window;
 
-	private static Component currentFocusOwner;
+    private static Component currentFocusOwner;
 
-	ProxyWindowPeer(ProxyWindow w) {
-		window = w;
+    ProxyWindowPeer(ProxyWindow w) {
+        window = w;
     }
-    
+
     @Override
     public void toFront() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void toBack() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setAlwaysOnTop(boolean alwaysOnTop) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void updateFocusableWindowState() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override No longer present in JDK6
@@ -73,43 +73,43 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void setModalBlocked(Dialog blocker, boolean blocked) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void updateMinimumSize() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void updateIconImages() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setOpacity(float opacity) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setOpaque(boolean isOpaque) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void updateWindow() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void repositionSecurityWarning() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -121,25 +121,25 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void beginValidate() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void endValidate() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void beginLayout() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void endLayout() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override Not present in JDK7
@@ -151,7 +151,7 @@ class ProxyWindowPeer implements FramePeer {
     // @Override Not present in JDK7
     public void restack() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override Not present in JDK7
@@ -181,49 +181,49 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void setVisible(boolean b) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setEnabled(boolean b) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void paint(Graphics g) {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override Not present in JDK7
     public void repaint(long tm, int x, int y, int width, int height) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void print(Graphics g) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setBounds(int x, int y, int width, int height, int op) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void handleEvent(AWTEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void coalescePaintEvent(PaintEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -270,75 +270,59 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setForeground(Color c) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setBackground(Color c) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setFont(Font f) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void updateCursorImmediately() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public boolean requestFocus(Component lightweightChild, boolean temporary,
             boolean focusedWindowChangeAllowed, long time, Cause cause) {
         if (KFMHelper.processSynchronousLightweightTransfer(window,
-                lightweightChild,
-                temporary,
-                focusedWindowChangeAllowed,
-                time)) {
+                lightweightChild, temporary, focusedWindowChangeAllowed, time)) {
             return true;
         }
 
-		int result = KFMHelper.shouldNativelyFocusHeavyweight(
-				window, lightweightChild, temporary,
-				focusedWindowChangeAllowed, time, cause);
+        int result = KFMHelper.shouldNativelyFocusHeavyweight(window,
+                lightweightChild, temporary, focusedWindowChangeAllowed, time,
+                cause);
 
-		switch (result) {
-		case KFMHelper.SNFH_FAILURE:
-			return false;
-		case KFMHelper.SNFH_SUCCESS_PROCEED:
-            return FXSwingKeyboardFocusManagerPeer.getInstance().requestFocus(window,
-                    lightweightChild,
-                    temporary,
-                    focusedWindowChangeAllowed,
-                    time, cause);
-//			if (currentFocusOwner != null) {
-//				FocusEvent fl = new sun.awt.CausedFocusEvent(lightweightChild,
-//						FocusEvent.FOCUS_LOST, false, lightweightChild, cause);
-//				SunToolkit.postEvent(AppContext.getAppContext(), fl);
-//			}
-//			FocusEvent fg = new sun.awt.CausedFocusEvent(lightweightChild,
-//					FocusEvent.FOCUS_GAINED, false, currentFocusOwner, cause);
-//			SunToolkit.postEvent(AppContext.getAppContext(), fg);
-//			currentFocusOwner = lightweightChild;
-//			//Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(ev);
-//			return true;
-		case KFMHelper.SNFH_SUCCESS_HANDLED:
-			// Either lightweight or excessive request - all events are
-			// generated.
-			return true;
-		default:
-			return false;
-		}
+        switch (result) {
+        case KFMHelper.SNFH_FAILURE:
+            return false;
+        case KFMHelper.SNFH_SUCCESS_PROCEED:
+            return FXSwingKeyboardFocusManagerPeer.getInstance().
+                    requestFocus(window, lightweightChild, temporary,
+                                 focusedWindowChangeAllowed, time, cause);
+        case KFMHelper.SNFH_SUCCESS_HANDLED:
+            // Either lightweight or excessive request - all events are
+            // generated.
+            return true;
+        default:
+            return false;
+        }
     }
 
     @Override
@@ -393,7 +377,7 @@ class ProxyWindowPeer implements FramePeer {
     public void createBuffers(int numBuffers, BufferCapabilities caps)
             throws AWTException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -405,19 +389,19 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void flip(int x1, int y1, int x2, int y2, FlipContents flipAction) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void destroyBuffers() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void reparent(ContainerPeer newContainer) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -429,7 +413,7 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void layout() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override Not present in JDK7
@@ -441,7 +425,7 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void applyShape(Region shape) {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override Not present in JDK7
@@ -459,55 +443,55 @@ class ProxyWindowPeer implements FramePeer {
     // @Override Not present in JDK7
     public void show() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override Not present in JDK7
     public void hide() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override no more present in JDK7
     public void enable() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override no more present in JDK7
     public void disable() {
         // TODO Auto-generated method stub
-        
+
     }
 
     // @Override no more present in JDK7
     public void reshape(int x, int y, int width, int height) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setTitle(String title) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setMenuBar(MenuBar mb) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setResizable(boolean resizeable) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setState(int state) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -519,13 +503,13 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public void setMaximizedBounds(Rectangle bounds) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setBoundsPrivate(int x, int y, int width, int height) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -534,17 +518,16 @@ class ProxyWindowPeer implements FramePeer {
         return null;
     }
 
-	// @Override Not present in JDK6
-	public void setZOrder(ComponentPeer above) {
-		// TODO Auto-generated method stub
-		
-	}
+    // @Override Not present in JDK6
+    public void setZOrder(ComponentPeer above) {
+        // TODO Auto-generated method stub
 
-	// @Override Not present in JDK6
-	public boolean updateGraphicsData(GraphicsConfiguration gc) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-    
+    // @Override Not present in JDK6
+    public boolean updateGraphicsData(GraphicsConfiguration gc) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
