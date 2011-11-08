@@ -135,6 +135,8 @@ public class SwingView extends BufferedImageView {
             public void run() {
                 
                 JComponent component = SwingView.this.component;
+                ProxyWindow proxy = new ProxyWindow(SwingView.this);
+                proxy.add(component);
                 component.addNotify();
                 
                 
@@ -144,8 +146,6 @@ public class SwingView extends BufferedImageView {
                 component.doLayout();
                 component.repaint();
                 
-                ProxyWindow proxy = new ProxyWindow(SwingView.this);
-                proxy.add(component);
             }
         });
     }

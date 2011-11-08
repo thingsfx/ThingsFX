@@ -28,7 +28,7 @@ class ProxyWindow extends Frame {
         this.proxyView = proxyView;
         
         try {
-            peer.set(this, new ProxyWindowPeer());
+            peer.set(this, new ProxyWindowPeer(this));
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,7 +39,11 @@ class ProxyWindow extends Frame {
     public boolean isVisible() {
         return proxyView.isVisible();
     }
-    
+    @Override
+    public boolean isShowing() {
+        return proxyView.isVisible();
+    }
+
     @Override
     public boolean isFocusTraversable() {
         return proxyView.isFocusTraversable();

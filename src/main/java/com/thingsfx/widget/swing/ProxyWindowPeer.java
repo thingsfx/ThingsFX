@@ -18,12 +18,12 @@ import java.awt.MenuBar;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
 import java.awt.event.PaintEvent;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.awt.image.VolatileImage;
+import java.awt.peer.ComponentPeer;
 import java.awt.peer.ContainerPeer;
 import java.awt.peer.FramePeer;
 
@@ -32,8 +32,12 @@ import sun.java2d.pipe.Region;
 
 class ProxyWindowPeer implements FramePeer {
 
-    ProxyWindowPeer() {
+	private ProxyWindow window;
 
+	private static Component currentFocusOwner;
+
+	ProxyWindowPeer(ProxyWindow w) {
+		window = w;
     }
     
     @Override
@@ -60,7 +64,7 @@ class ProxyWindowPeer implements FramePeer {
         
     }
 
-    @Override
+    // @Override No longer present in JDK6
     public boolean requestWindowFocus() {
         // TODO Auto-generated method stub
         return true;
@@ -138,25 +142,25 @@ class ProxyWindowPeer implements FramePeer {
         
     }
 
-    @Override
+    // @Override Not present in JDK7
     public boolean isPaintPending() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    @Override
+    // @Override Not present in JDK7
     public void restack() {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
+    // @Override Not present in JDK7
     public boolean isRestackSupported() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    @Override
+    // @Override Not present in JDK7
     public Insets insets() {
         // TODO Auto-generated method stub
         return null;
@@ -192,7 +196,7 @@ class ProxyWindowPeer implements FramePeer {
         
     }
 
-    @Override
+    // @Override Not present in JDK7
     public void repaint(long tm, int x, int y, int width, int height) {
         // TODO Auto-generated method stub
         
@@ -296,12 +300,45 @@ class ProxyWindowPeer implements FramePeer {
     @Override
     public boolean requestFocus(Component lightweightChild, boolean temporary,
             boolean focusedWindowChangeAllowed, long time, Cause cause) {
-        FocusEvent ev =
-                new sun.awt.CausedFocusEvent(lightweightChild,
-                                             FocusEvent.FOCUS_GAINED, false,
-                                             null, cause);
-        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(ev);
-        return true;
+        if (KFMHelper.processSynchronousLightweightTransfer(window,
+                lightweightChild,
+                temporary,
+                focusedWindowChangeAllowed,
+                time)) {
+            return true;
+        }
+
+		int result = KFMHelper.shouldNativelyFocusHeavyweight(
+				window, lightweightChild, temporary,
+				focusedWindowChangeAllowed, time, cause);
+
+		switch (result) {
+		case KFMHelper.SNFH_FAILURE:
+			return false;
+		case KFMHelper.SNFH_SUCCESS_PROCEED:
+            return FXSwingKeyboardFocusManagerPeer.getInstance().requestFocus(window,
+                    lightweightChild,
+                    temporary,
+                    focusedWindowChangeAllowed,
+                    time, cause);
+//			if (currentFocusOwner != null) {
+//				FocusEvent fl = new sun.awt.CausedFocusEvent(lightweightChild,
+//						FocusEvent.FOCUS_LOST, false, lightweightChild, cause);
+//				SunToolkit.postEvent(AppContext.getAppContext(), fl);
+//			}
+//			FocusEvent fg = new sun.awt.CausedFocusEvent(lightweightChild,
+//					FocusEvent.FOCUS_GAINED, false, currentFocusOwner, cause);
+//			SunToolkit.postEvent(AppContext.getAppContext(), fg);
+//			currentFocusOwner = lightweightChild;
+//			//Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(ev);
+//			return true;
+		case KFMHelper.SNFH_SUCCESS_HANDLED:
+			// Either lightweight or excessive request - all events are
+			// generated.
+			return true;
+		default:
+			return false;
+		}
     }
 
     @Override
@@ -395,7 +432,7 @@ class ProxyWindowPeer implements FramePeer {
         
     }
 
-    @Override
+    // @Override Not present in JDK7
     public Rectangle getBounds() {
         // TODO Auto-generated method stub
         return null;
@@ -407,43 +444,43 @@ class ProxyWindowPeer implements FramePeer {
         
     }
 
-    @Override
+    // @Override Not present in JDK7
     public Dimension preferredSize() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    // @Override Not present in JDK7
     public Dimension minimumSize() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    // @Override Not present in JDK7
     public void show() {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
+    // @Override Not present in JDK7
     public void hide() {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
+    // @Override no more present in JDK7
     public void enable() {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
+    // @Override no more present in JDK7
     public void disable() {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
+    // @Override no more present in JDK7
     public void reshape(int x, int y, int width, int height) {
         // TODO Auto-generated method stub
         
@@ -496,6 +533,18 @@ class ProxyWindowPeer implements FramePeer {
         // TODO Auto-generated method stub
         return null;
     }
+
+	// @Override Not present in JDK6
+	public void setZOrder(ComponentPeer above) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	// @Override Not present in JDK6
+	public boolean updateGraphicsData(GraphicsConfiguration gc) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
     
 }

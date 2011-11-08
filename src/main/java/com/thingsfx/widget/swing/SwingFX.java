@@ -17,6 +17,9 @@
 
 package com.thingsfx.widget.swing;
 
+import java.awt.KeyboardFocusManager;
+import java.lang.reflect.Field;
+
 import javax.swing.RepaintManager;
 
 /**
@@ -31,6 +34,25 @@ public class SwingFX {
      * by {@link SwingView}.
      */
     public static void init() {
+    	Class kfmCls = KeyboardFocusManager.class;
+    	Field peer;
+		try {
+			peer = kfmCls.getDeclaredField("peer");
+	    	peer.setAccessible(true);
+	    	peer.set(KeyboardFocusManager.getCurrentKeyboardFocusManager(), FXSwingKeyboardFocusManagerPeer.getInstance());
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         RepaintManager.setCurrentManager(new ThingsFXRepaintManager());
     }
 }
