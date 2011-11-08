@@ -25,32 +25,32 @@ class KFMHelper {
                                                          Component lightweightChild,
                                                          boolean temporary,
                                                          boolean focusedWindowChangeAllowed,
-                                                         long time) {
+                                                         long time)
+    {
         try {
             if (processSynchronousLightweightTransferMethod == null) {
-                processSynchronousLightweightTransferMethod =
-                    (Method)AccessController.doPrivileged(
-                        new PrivilegedExceptionAction() {
-                            public Object run() throws IllegalAccessException, NoSuchMethodException
-                            {
-                                Method m = KeyboardFocusManager.class.
-                                    getDeclaredMethod("processSynchronousLightweightTransfer",
-                                                      new Class[] {Component.class, Component.class,
-                                                                   Boolean.TYPE, Boolean.TYPE,
-                                                                   Long.TYPE});
+                processSynchronousLightweightTransferMethod = (Method) AccessController
+                        .doPrivileged(new PrivilegedExceptionAction() {
+                            public Object run() throws IllegalAccessException,
+                                    NoSuchMethodException {
+                                Method m = KeyboardFocusManager.class
+                                        .getDeclaredMethod(
+                                                "processSynchronousLightweightTransfer",
+                                                new Class[] { Component.class,
+                                                        Component.class,
+                                                        Boolean.TYPE,
+                                                        Boolean.TYPE, Long.TYPE });
                                 m.setAccessible(true);
                                 return m;
                             }
                         });
             }
-            Object[] params = new Object[] {
-                target,
-                lightweightChild,
-                Boolean.valueOf(temporary),
-                Boolean.valueOf(focusedWindowChangeAllowed),
-                Long.valueOf(time)
-            };
-            return ((Boolean) processSynchronousLightweightTransferMethod.invoke(null, params)).booleanValue();
+            Object[] params = new Object[] { target, lightweightChild,
+                    Boolean.valueOf(temporary),
+                    Boolean.valueOf(focusedWindowChangeAllowed),
+                    Long.valueOf(time) };
+            return ((Boolean) processSynchronousLightweightTransferMethod
+                    .invoke(null, params)).booleanValue();
         } catch (PrivilegedActionException pae) {
             pae.printStackTrace();
             return false;
@@ -67,44 +67,47 @@ class KFMHelper {
     }
 
     static int shouldNativelyFocusHeavyweight(Component heavyweight,
-         Component descendant, boolean temporary,
-         boolean focusedWindowChangeAllowed, long time, CausedFocusEvent.Cause cause)
+                                              Component descendant,
+                                              boolean temporary,
+                                              boolean focusedWindowChangeAllowed,
+                                              long time,
+                                              CausedFocusEvent.Cause cause)
     {
         if (shouldNativelyFocusHeavyweightMethod == null) {
-            Class[] arg_types =
-                new Class[] { Component.class,
-                              Component.class,
-                              Boolean.TYPE,
-                              Boolean.TYPE,
-                              Long.TYPE,
-                              CausedFocusEvent.Cause.class
+            Class[] arg_types = new Class[] {
+                    Component.class, Component.class,
+                    Boolean.TYPE, Boolean.TYPE, Long.TYPE,
+                    CausedFocusEvent.Cause.class
             };
 
             try {
-				shouldNativelyFocusHeavyweightMethod = KeyboardFocusManager.class.getDeclaredMethod("shouldNativelyFocusHeavyweight",
-				                       arg_types);
-				shouldNativelyFocusHeavyweightMethod.setAccessible(true);
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
+                shouldNativelyFocusHeavyweightMethod = KeyboardFocusManager.class
+                        .getDeclaredMethod("shouldNativelyFocusHeavyweight",
+                                arg_types);
+                shouldNativelyFocusHeavyweightMethod.setAccessible(true);
+                
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
         }
-        Object[] args = new Object[] { heavyweight,
-                                       descendant,
-                                       Boolean.valueOf(temporary),
-                                       Boolean.valueOf(focusedWindowChangeAllowed),
-                                       Long.valueOf(time), cause};
+        Object[] args = new Object[] {
+                heavyweight, descendant,
+                Boolean.valueOf(temporary),
+                Boolean.valueOf(focusedWindowChangeAllowed),
+                Long.valueOf(time), cause
+        };
 
         int result = SNFH_FAILURE;
         if (shouldNativelyFocusHeavyweightMethod != null) {
             try {
-                result = ((Integer) shouldNativelyFocusHeavyweightMethod.invoke(null, args)).intValue();
-            }
-            catch (IllegalAccessException e) {
+                result = ((Integer)
+                        shouldNativelyFocusHeavyweightMethod.invoke(null, args)).intValue();
+            } catch (IllegalAccessException e) {
                 assert false;
-            }
-            catch (InvocationTargetException e) {
+                
+            } catch (InvocationTargetException e) {
                 assert false;
             }
         }
