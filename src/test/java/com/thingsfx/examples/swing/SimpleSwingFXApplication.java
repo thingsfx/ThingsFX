@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
