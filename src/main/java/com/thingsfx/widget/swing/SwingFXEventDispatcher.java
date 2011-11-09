@@ -19,6 +19,9 @@ package com.thingsfx.widget.swing;
 
 import java.awt.AWTEvent;
 import java.awt.Container;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -72,8 +75,9 @@ public class SwingFXEventDispatcher {
         }
         try {
             Object dispatcher = newLightweightDispatcher.newInstance(component);
-            enableEvents.invoke(dispatcher, MOUSE_MASK);
+            enableEvents.invoke(dispatcher, MOUSE_MASK | AWTEvent.KEY_EVENT_MASK);
             dispatcherField.set(component, dispatcher);
+            component.addKeyListener(new KeyAdapter(){});
         } catch (Exception e) {
             e.printStackTrace();
         }

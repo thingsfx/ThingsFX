@@ -18,6 +18,7 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
@@ -30,6 +31,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Group;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 
 import javax.swing.JComponent;
@@ -126,6 +128,7 @@ public class SwingView extends Group {
 
     private JComponent component;
 
+    private ProxyWindow proxy;
     private BufferedImageView imgView;
 
     public SwingView(JComponent component) {
@@ -152,7 +155,7 @@ public class SwingView extends Group {
             public void run() {
 
                 JComponent component = SwingView.this.component;
-                ProxyWindow proxy = new ProxyWindow(SwingView.this);
+                proxy = new ProxyWindow(SwingView.this);
                 proxy.add(component);
                 component.addNotify();
 
@@ -172,6 +175,10 @@ public class SwingView extends Group {
         setOnMouseMoved(handler);
         setOnMouseEntered(handler);
         setOnMouseExited(handler);
+        KeyEventHandler keyHandler = new KeyEventHandler(component);
+        setOnKeyPressed(keyHandler);
+        setOnKeyReleased(keyHandler);
+        setOnKeyTyped(keyHandler);
         focusedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -192,4 +199,5 @@ public class SwingView extends Group {
     BufferedImageView getImageView() {
     	return imgView;
     }
+
 }
