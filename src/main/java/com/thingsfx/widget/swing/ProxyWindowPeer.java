@@ -27,6 +27,9 @@ import java.awt.peer.ComponentPeer;
 import java.awt.peer.ContainerPeer;
 import java.awt.peer.FramePeer;
 
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Window;
 import sun.awt.CausedFocusEvent.Cause;
 import sun.java2d.pipe.Region;
 
@@ -195,7 +198,24 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public Point getLocationOnScreen() {
-        throw new UnsupportedOperationException();
+        Point loc = new Point();
+        Node node = window.getProxyView();
+        while (true) {
+            loc.x += node.getLayoutX();
+            loc.y += node.getLayoutY();
+            Node parent = node.getParent();
+            if (parent == null) {
+                break;
+            }
+            node = parent;
+        }
+        Scene scene = node.getScene();
+        loc.x += scene.getX();
+        loc.y += scene.getY();
+        Window window = scene.getWindow();
+        loc.x += window.getX();
+        loc.y += window.getY();
+        return loc;
     }
 
     @Override

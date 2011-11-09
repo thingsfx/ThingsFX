@@ -53,6 +53,8 @@ public class SwingView extends Group {
                 MouseEvent.MOUSE_EXITED);
         map.put(javafx.scene.input.MouseEvent.MOUSE_MOVED,
                 MouseEvent.MOUSE_MOVED);
+        map.put(javafx.scene.input.MouseEvent.MOUSE_DRAGGED,
+                MouseEvent.MOUSE_DRAGGED);
         mouseEventMap = Collections.unmodifiableMap(map);
     }
 
@@ -173,6 +175,7 @@ public class SwingView extends Group {
         setOnMousePressed(handler);
         setOnMouseReleased(handler);
         setOnMouseMoved(handler);
+        setOnMouseDragged(handler);
         setOnMouseEntered(handler);
         setOnMouseExited(handler);
         KeyEventHandler keyHandler = new KeyEventHandler(component);
