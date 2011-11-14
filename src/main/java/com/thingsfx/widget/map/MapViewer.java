@@ -7,7 +7,7 @@ public interface MapViewer {
 		BING,
 
         /**
-         * @deprecated Not fully supported. Only for testing purposes.
+         * @deprecated Not yet fully supported. Only for testing purposes.
          */
 		YAHOO
 	}
@@ -32,5 +32,6 @@ public interface MapViewer {
 	public void zoomIn();
 	public void zoomOut();
     public void setZoom(double zoomLevel);
+    public double getZoom();
 
 }

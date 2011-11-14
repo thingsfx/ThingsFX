@@ -15,6 +15,7 @@
             mapTypeId : Microsoft.Maps.MapTypeId.road,
             showDashboard : false
         }
+        
         document.map = new Microsoft.Maps.Map(document
                 .getElementById("map_canvas"), mapOptions);
 
@@ -62,8 +63,10 @@
         }
         
         document.goToLocation = function goToLocation(searchString) {
-            document.map.drawZoomAndCenter(searchString ,document.map.getZoomLevel());
+            // document.map.drawZoomAndCenter(searchString ,document.map.getZoomLevel());
+            // FIXME: find out how this works in the BING api.
         }
+        
         document.showControls = function showControls() {
             document.map.setView({
                 showDashboard : true
