@@ -33,12 +33,24 @@ class KeyEventHandler implements EventHandler<javafx.scene.input.KeyEvent> {
 
     @Override
     public void handle(javafx.scene.input.KeyEvent ke) {
-        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        Component focusOwner =
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         int id = getKeyEventId(ke);
         long when = System.currentTimeMillis();
         int mods = getAWTModifiers(ke);
         int keyCode = getAWTKeyCode(ke);
-        final java.awt.event.KeyEvent kp = new java.awt.event.KeyEvent(focusOwner, id, when, mods, keyCode, ke.getCharacter().charAt(0));
+        char keyChar = !ke.getCharacter().isEmpty() ?
+                        ke.getCharacter().charAt(0) :
+                        java.awt.event.KeyEvent.CHAR_UNDEFINED;
+        if (id == java.awt.event.KeyEvent.KEY_TYPED &&
+            keyChar == java.awt.event.KeyEvent.CHAR_UNDEFINED)
+        {
+            return;
+        }
+
+        final java.awt.event.KeyEvent kp =
+                new java.awt.event.KeyEvent(focusOwner, id, when, mods, keyCode,
+                                            keyChar);
         EventQueue.invokeLater(new Runnable() {
             
             @Override

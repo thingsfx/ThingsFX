@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="map.css" />
+
+<script charset="UTF-8" type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+
+<script type="text/javascript">
+    function initialize() {
+        var mapOptions = {
+            credentials : "*** PUT YOUR API KEY HERE ***",
+            center : new Microsoft.Maps.Location(0, 0),
+            zoom : 2,
+            mapTypeId : Microsoft.Maps.MapTypeId.road,
+            showDashboard : false
+        }
+        document.map = new Microsoft.Maps.Map(document
+                .getElementById("map_canvas"), mapOptions);
+
+        document.zoomOut = function zoomOut() {
+            var zoomLevel = document.map.getZoom();
+            if (zoomLevel > 1)
+                document.map.setView({
+                    zoom : zoomLevel - 1
+                });
+        }
+
+        document.zoomIn = function zoomIn() {
+            var zoomLevel = document.map.getZoom();
+            if (zoomLevel <= 16)
+                document.map.setView({
+                    zoom : zoomLevel + 1
+                });
+        }
+
+        document.setZoom = function setZoom(newZoomLevel) {
+            var zoomLevel = Math.round(16 * newZoomLevel) + 1;
+            document.map.setView({
+                zoom : zoomLevel
+            });
+        }
+
+        document.setMapType = function setMapType(mapType) {
+            if (mapType == "ROAD") {
+                document.map.setView({
+                    mapTypeId : Microsoft.Maps.MapTypeId.road
+                });
+            } else if (mapType == "SATELLITE") {
+                document.map.setView({
+                    mapTypeId : Microsoft.Maps.MapTypeId.aerial
+                });
+            } else if (mapType == "HYBRID") {
+                document.map.setView({
+                    mapTypeId : Microsoft.Maps.MapTypeId.aerial
+                });
+            } else if (mapType == "TERRAIN") {
+                document.map.setView({
+                    mapTypeId : Microsoft.Maps.MapTypeId.auto
+                });
+            }
+        }
+        
+        document.goToLocation = function goToLocation(searchString) {
+            document.map.drawZoomAndCenter(searchString ,document.map.getZoomLevel());
+        }
+        document.showControls = function showControls() {
+            document.map.setView({
+                showDashboard : true
+            });
+        }
+
+        document.hideControls = function hideControls() {
+            document.map.setView({
+                showDashboard : false
+            });
+        }
+    }
+</script>
+</head>
+<body onload="initialize()">
+    <div id="map_canvas"></div>
+</body>
+</html>
