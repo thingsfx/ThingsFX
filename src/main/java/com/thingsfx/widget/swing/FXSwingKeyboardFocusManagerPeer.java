@@ -6,6 +6,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.peer.KeyboardFocusManagerPeer;
+import java.util.logging.Logger;
 
 import sun.awt.AppContext;
 import sun.awt.CausedFocusEvent;
@@ -13,6 +14,8 @@ import sun.awt.CausedFocusEvent.Cause;
 import sun.awt.SunToolkit;
 
 class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
+
+    private static Logger log = Logger.getLogger(FXSwingKeyboardFocusManagerPeer.class.getName());
 
     private static FXSwingKeyboardFocusManagerPeer instance;
 
@@ -90,29 +93,28 @@ class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
     boolean requestFocus(Component target, Component lightweightChild, boolean temporary,
                          boolean focusedWindowChangeAllowed, long time, Cause cause) {
 
-        if (lightweightChild == null) {
-            lightweightChild = target;
+        if (target instanceof ProxyWindow) {
+            ((ProxyWindow) target).getProxyView().requestFocus();
+        } else {
+            log.warning("Cannot handle non-ProxyWindow component");
         }
-        Component currentOwner = getCurrentFocusOwner();
-        if (currentOwner != null && currentOwner.getPeer() == null) {
-            currentOwner = null;
-        }
-        FocusEvent fg = new CausedFocusEvent(lightweightChild, FocusEvent.FOCUS_GAINED, false, currentOwner, cause);
-        FocusEvent fl = null;
-        if (currentOwner != null) {
-            fl = new CausedFocusEvent(currentOwner, FocusEvent.FOCUS_LOST, false, lightweightChild, cause);
-        }
-
-        if (fl != null) {
-            postEvent(fl);
-        }
-        postEvent(fg);
-        return true;
-
+        return false;
     }
 
     private void postEvent(AWTEvent ev) {
         SunToolkit.postEvent(AppContext.getAppContext(), ev);
+    }
+
+    void focusGained(ProxyWindow w) {
+        log.fine("Focus gained: " + w);
+        FocusEvent fg = new CausedFocusEvent(w, FocusEvent.FOCUS_GAINED, false, currentFocusOwner, Cause.NATIVE_SYSTEM);
+        postEvent(fg);
+    }
+
+    void focusLost(ProxyWindow w) {
+        log.fine("Focus lost: " + w);
+        FocusEvent fl = new CausedFocusEvent(w, FocusEvent.FOCUS_LOST, false, null, Cause.NATIVE_SYSTEM);
+        postEvent(fl);
     }
 
 }

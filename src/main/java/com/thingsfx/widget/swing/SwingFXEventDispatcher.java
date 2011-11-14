@@ -20,8 +20,6 @@ package com.thingsfx.widget.swing;
 import java.awt.AWTEvent;
 import java.awt.Container;
 import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

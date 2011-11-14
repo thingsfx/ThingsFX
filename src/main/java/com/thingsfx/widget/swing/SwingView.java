@@ -18,7 +18,6 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
-import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
@@ -31,7 +30,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Group;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 
 import javax.swing.JComponent;

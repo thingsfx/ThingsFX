@@ -9,7 +9,6 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 import sun.awt.CausedFocusEvent;
-import sun.awt.SunToolkit;
 
 class KFMHelper {
 

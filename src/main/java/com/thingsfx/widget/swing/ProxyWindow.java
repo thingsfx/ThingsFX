@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.lang.reflect.Field;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 class ProxyWindow extends Frame {
 
     private static Field peer;
@@ -33,6 +36,18 @@ class ProxyWindow extends Frame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        proxyView.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs,
+                                Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    FXSwingKeyboardFocusManagerPeer.getInstance().focusGained(ProxyWindow.this);
+                } else {
+                    FXSwingKeyboardFocusManagerPeer.getInstance().focusLost(ProxyWindow.this);
+                }
+            }
+        });
     }
 
     @Override
