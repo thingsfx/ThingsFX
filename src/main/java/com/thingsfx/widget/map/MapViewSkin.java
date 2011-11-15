@@ -1,13 +1,19 @@
 package com.thingsfx.widget.map;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Duration;
 
 import com.thingsfx.widget.map.MapViewer.MapProvider;
 import com.thingsfx.widget.map.MapViewer.MapType;
@@ -24,6 +30,8 @@ class MapViewSkin implements Skin<MapView> {
     private ChoiceBox<MapType> mapTypeChoiceBox;
     private BorderPane bottomPanel;
     private BorderPane root;
+    private AnchorPane anchorPane;
+    private Timeline animationTimeline;
 
     public MapViewSkin(MapView control) {
         this.control = control;
@@ -53,9 +61,40 @@ class MapViewSkin implements Skin<MapView> {
         bottomPanel.setCenter(zoomSlider);
         bottomPanel.setRight(mapTypeChoiceBox);
 
-        root = new BorderPane();
-        root.setCenter(webView);
+        anchorPane = new AnchorPane();
 
+        anchorPane.getChildren().addAll(webView, topPanel, bottomPanel);
+
+        AnchorPane.setTopAnchor(topPanel, 8.0);
+        AnchorPane.setRightAnchor(topPanel, 5.0);
+        AnchorPane.setLeftAnchor(topPanel, 5.0);
+
+        AnchorPane.setTopAnchor(webView, 0.0);
+        AnchorPane.setLeftAnchor(webView, 0.0);
+        AnchorPane.setBottomAnchor(webView, 0.0);
+        AnchorPane.setRightAnchor(webView, 0.0);
+
+        AnchorPane.setBottomAnchor(bottomPanel, 8.0);
+        AnchorPane.setRightAnchor(bottomPanel, 5.0);
+        AnchorPane.setLeftAnchor(bottomPanel, 5.0);
+
+        root = new BorderPane();
+        root.setCenter(anchorPane);
+
+        animationTimeline = new Timeline(500);
+        animationTimeline.getKeyFrames().addAll(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(topPanel.opacityProperty(), 0.9, Interpolator.EASE_BOTH),
+                        new KeyValue(bottomPanel.opacityProperty(), 0.9, Interpolator.EASE_BOTH)
+
+                ),
+                new KeyFrame(new Duration(500),
+                        new KeyValue(topPanel.opacityProperty(), 0.2, Interpolator.EASE_BOTH),
+                        new KeyValue(bottomPanel.opacityProperty(), 0.2, Interpolator.EASE_BOTH)
+                )
+                );
+
+        setControlsVisible(false);
     }
 
     private boolean areChoiceBoxShowing() {
@@ -66,8 +105,14 @@ class MapViewSkin implements Skin<MapView> {
         if (areChoiceBoxShowing()) {
             return;
         }
-        root.setTop(visible ? topPanel : null);
-        root.setBottom(visible ? bottomPanel : null);
+        if (visible) {
+            animationTimeline.setCycleCount(2);
+            animationTimeline.setAutoReverse(true);
+            animationTimeline.playFrom(new Duration(500));
+        } else {
+            animationTimeline.setCycleCount(1);
+            animationTimeline.play();
+        }
     }
 
     @Override
