@@ -48,6 +48,5 @@ public class SwingFX {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        RepaintManager.setCurrentManager(new ThingsFXRepaintManager());
     }
 }

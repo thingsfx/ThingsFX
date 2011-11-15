@@ -18,25 +18,32 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Group;
+import javafx.geometry.Bounds;
+import javafx.scene.control.Control;
 import javafx.scene.input.MouseButton;
 
 import javax.swing.JComponent;
-import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
-public class SwingView extends Group {
+public class SwingView extends Control {
 
     private static final Map<EventType<?>, Integer> mouseEventMap;
     static {
@@ -126,30 +133,63 @@ public class SwingView extends Group {
         }
     }
 
+    private class PainterTask implements Runnable {
+
+        @Override
+        public void run() {
+            getImageView().paintImage(getBackBuffer());
+            painterTaskFuture = null;
+        }
+        
+    }
+
+    private static final long COMMIT_DELAY = 50;
+
     private JComponent component;
 
     private ProxyWindow proxy;
     private BufferedImageView imgView;
 
-    public SwingView(JComponent component) {
+    private BufferedImage backBuffer;
 
-    	imgView = new BufferedImageView();
+    private static ScheduledExecutorService painterTimer = Executors.newScheduledThreadPool(1);
+
+    private Runnable painterTask = new PainterTask();
+    private ScheduledFuture painterTaskFuture;
+
+    public SwingView(JComponent comp) {
+
+        this.component = comp;
+
+        imgView = new BufferedImageView() {
+    	    
+    	};
     	getChildren().add(imgView);
-        RepaintManager repaintManager = RepaintManager
-                .currentManager(component);
-        if (!(repaintManager instanceof ThingsFXRepaintManager)) {
-            throw new IllegalStateException("SwingFX.init() method must be "
-                    + "called before any Swing rendering"
-                    + "and any JavaFX routine call");
-        }
-
-        ((ThingsFXRepaintManager) repaintManager).registerListener(this,
-                component);
-
-        this.component = component;
 
         registerEvents();
 
+        layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Bounds> obs,
+                    Bounds oldVal, final Bounds newVal) {
+                EventQueue.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        proxy.setSize((int) newVal.getWidth(), (int) newVal.getHeight());
+                        component.setSize((int) newVal.getWidth(), (int) newVal.getHeight());
+                        component.validate();
+                    }
+                    
+                });
+            }
+        });
+
+        Dimension min = component.getMinimumSize();
+        setMinSize(min.getWidth(), min.getHeight());
+        Dimension pref = component.getPreferredSize();
+        setMinSize(pref.getWidth(), pref.getHeight());
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -201,4 +241,27 @@ public class SwingView extends Group {
     	return imgView;
     }
 
+    protected double computePrefWidth(double h) {
+        return component.getPreferredSize().getWidth();
+    }
+
+    protected double computePrefHeight(double w) {
+        return component.getPreferredSize().getHeight();
+    }
+
+    public void commit() {
+
+        if (painterTaskFuture != null) {
+          painterTaskFuture.cancel(false);
+        }
+
+        painterTaskFuture = painterTimer.schedule(painterTask, COMMIT_DELAY, TimeUnit.MILLISECONDS);
+    }
+
+    BufferedImage getBackBuffer() {
+        if (backBuffer == null || backBuffer.getWidth() < component.getWidth() || backBuffer.getHeight() < component.getHeight()) {
+            backBuffer = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        }
+        return backBuffer;
+    }
 }

@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.Insets;
@@ -103,27 +104,27 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public Insets getInsets() {
-        throw new UnsupportedOperationException();
+        return new Insets(0, 0, 0, 0);
     }
 
     @Override
     public void beginValidate() {
-        throw new UnsupportedOperationException();
+        // Nothing to do here.
     }
 
     @Override
     public void endValidate() {
-        throw new UnsupportedOperationException();
+        // Nothing to do here.
     }
 
     @Override
     public void beginLayout() {
-        throw new UnsupportedOperationException();
+        // Nothing to do here.
     }
 
     @Override
     public void endLayout() {
-        throw new UnsupportedOperationException();
+        // Nothing to do here.
     }
 
     // @Override Not present in JDK7
@@ -183,7 +184,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public void setBounds(int x, int y, int width, int height, int op) {
-        throw new UnsupportedOperationException();
+        // Nothing to do here.
     }
 
     @Override
@@ -193,7 +194,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public void coalescePaintEvent(PaintEvent e) {
-        throw new UnsupportedOperationException();
+     // Nothing to do here.
     }
 
     @Override
@@ -240,7 +241,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public Graphics getGraphics() {
-        throw new UnsupportedOperationException();
+        return new ProxyGraphics(window.getProxyView(), (Graphics2D) window.getProxyView().getBackBuffer().getGraphics());
     }
 
     @Override
@@ -374,7 +375,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public void layout() {
-        throw new UnsupportedOperationException();
+        // Nothing to do here.
     }
 
     // @Override Not present in JDK7
