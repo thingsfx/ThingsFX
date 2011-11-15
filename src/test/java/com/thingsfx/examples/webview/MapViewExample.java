@@ -14,8 +14,8 @@ public class MapViewExample extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        MapView mapView = new MapView("Barcelona", 0.5);
-        Scene scene = new Scene(mapView, 400, 300);
+        MapView mapView = new MapView("Barcelona", 0.2);
+        Scene scene = new Scene(mapView, 500, 400);
         stage.setScene(scene);
         stage.show();
     }
