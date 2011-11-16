@@ -26,6 +26,7 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.Paint;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -51,6 +52,66 @@ class ProxyGraphics extends Graphics2D {
     ProxyGraphics(SwingView v, Graphics2D p) {
         swingView = v;
         proxy = p;
+    }
+
+    @Override
+    public void draw3DRect(int x, int y, int width, int height, boolean raised) {
+        proxy.draw3DRect(x, y, width, height, raised);
+    }
+    
+    @Override
+    public void drawBytes(byte[] data, int offset, int length, int x, int y) {
+        proxy.drawBytes(data, offset, length, x, y);
+    }
+    
+    @Override
+    public void drawChars(char[] data, int offset, int length, int x, int y) {
+        proxy.drawChars(data, offset, length, x, y);
+    }
+    
+    @Override
+    public Graphics create(int x, int y, int width, int height) {
+        return proxy.create(x, y, width, height);
+    }
+    
+    @Override
+    public void drawPolygon(Polygon p) {
+        proxy.drawPolygon(p);
+    }
+    
+    @Override
+    public void fill3DRect(int x, int y, int width, int height, boolean raised) {
+        proxy.fill3DRect(x, y, width, height, raised);
+    }
+    
+    @Override
+    public void drawRect(int x, int y, int width, int height) {
+        proxy.drawRect(x, y, width, height);
+    }
+    
+    @Override
+    public void fillPolygon(Polygon p) {
+       proxy.fillPolygon(p);
+    }
+    
+    @Override
+    public Rectangle getClipBounds(Rectangle r) {
+        return proxy.getClipBounds(r);
+    }
+    
+    @Override
+    public Rectangle getClipRect() {
+        return proxy.getClipRect();
+    }
+    
+    @Override
+    public FontMetrics getFontMetrics() {
+        return proxy.getFontMetrics();
+    }
+    
+    @Override
+    public boolean hitClip(int x, int y, int width, int height) {
+        return proxy.hitClip(x, y, width, height);
     }
 
     @Override
