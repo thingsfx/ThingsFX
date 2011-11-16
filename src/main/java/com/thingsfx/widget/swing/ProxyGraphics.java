@@ -254,7 +254,8 @@ class ProxyGraphics extends Graphics2D {
     @Override
     public Graphics create() {
         Graphics2D copy = (Graphics2D) proxy.create();
-        return new ProxyGraphics(swingView, copy);
+        ProxyGraphics graphics = new ProxyGraphics(swingView, copy);
+        return graphics;
     }
 
     @Override
@@ -299,7 +300,7 @@ class ProxyGraphics extends Graphics2D {
 
     @Override
     public void clipRect(int x, int y, int width, int height) {
-        proxy.clearRect(x, y, width, height);
+        proxy.clipRect(x, y, width, height);
     }
 
     @Override
