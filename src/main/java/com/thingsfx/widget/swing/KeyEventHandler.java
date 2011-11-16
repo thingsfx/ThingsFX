@@ -35,6 +35,9 @@ class KeyEventHandler implements EventHandler<javafx.scene.input.KeyEvent> {
     public void handle(javafx.scene.input.KeyEvent ke) {
         Component focusOwner =
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focusOwner == null) {
+            return;
+        }
         int id = getKeyEventId(ke);
         long when = System.currentTimeMillis();
         int mods = getAWTModifiers(ke);
