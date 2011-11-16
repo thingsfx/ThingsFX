@@ -154,7 +154,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public boolean canDetermineObscurity() {
-        throw new UnsupportedOperationException();
+        return false;
     }
 
     @Override
@@ -445,7 +445,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public int getState() {
-        throw new UnsupportedOperationException();
+        return 0;
     }
 
     @Override
