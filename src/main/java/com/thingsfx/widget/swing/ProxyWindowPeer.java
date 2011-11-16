@@ -241,7 +241,8 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public Graphics getGraphics() {
-        return new ProxyGraphics(window.getProxyView(), (Graphics2D) window.getProxyView().getBackBuffer().getGraphics());
+        return new ProxyGraphics(window.getProxyView(), (Graphics2D)
+                        window.getProxyView().getBackBuffer().getGraphics());
     }
 
     @Override
