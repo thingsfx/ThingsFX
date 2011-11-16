@@ -54,7 +54,9 @@ public class MapView extends Control implements MapViewer {
             @Override
             public void changed(ObservableValue<? extends Number> value, Number oldValue, Number newValue) {
                 if (newValue.doubleValue() >= 100.0) {
-                    processPendingScripts();
+                    if (webEngine.getLoadWorker().getProgress() > 0) {
+                        processPendingScripts();
+                    }
                 }
             }
         });
@@ -118,6 +120,22 @@ public class MapView extends Control implements MapViewer {
         };
         skin.getNode().setOnMouseExited(mouseEventHandler);
         skin.getNode().setOnMouseEntered(mouseEventHandler);
+
+        webEngine.getLoadWorker().workDoneProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                skin.getProgressIndicator().progressProperty().set(arg2.doubleValue() / webEngine.getLoadWorker().getTotalWork());
+            }
+        });
+
+        skin.getProgressIndicator().progressProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                skin.getProgressIndicator().setVisible(arg2.doubleValue() < 1.0);
+            }
+        });
 
         setProvider(provider);
         setLocation(location);

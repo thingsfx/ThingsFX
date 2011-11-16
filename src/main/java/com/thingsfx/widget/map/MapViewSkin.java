@@ -4,8 +4,11 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -15,19 +18,24 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
 
+import com.sun.javafx.geom.Dimension2D;
 import com.thingsfx.widget.map.MapViewer.MapProvider;
 import com.thingsfx.widget.map.MapViewer.MapType;
+import com.thingsfx.widget.text.ResetableTextField;
 
 class MapViewSkin implements Skin<MapView> {
 
+    private static final Dimension2D PROGESS_BAR_DIMENSION = new Dimension2D(150, 18);
     private WebView webView;
     private WebEngine webEngine;
     private MapView control;
+    private ProgressBar progressBar;
     private TextField locationTextField;
     private ChoiceBox<MapProvider> mapProviderChoiceBox;
     private BorderPane topPanel;
     private Slider zoomSlider;
     private ChoiceBox<MapType> mapTypeChoiceBox;
+    private BorderPane leftPanel;
     private BorderPane bottomPanel;
     private BorderPane root;
     private AnchorPane anchorPane;
@@ -40,43 +48,56 @@ class MapViewSkin implements Skin<MapView> {
         webView.setMouseTransparent(true);
         webEngine = webView.getEngine();
 
-        locationTextField = new TextField();
-        locationTextField.setPromptText("Location (currently works only for Google Maps)");
+        locationTextField = new ResetableTextField();
+        locationTextField.setPromptText("Location");
 
         mapProviderChoiceBox = new ChoiceBox<MapViewer.MapProvider>();
         mapProviderChoiceBox.getItems().addAll(MapProvider.values());
 
         topPanel = new BorderPane();
-        topPanel.setCenter(locationTextField);
+        topPanel.setLeft(locationTextField);
         topPanel.setRight(mapProviderChoiceBox);
 
         zoomSlider = new Slider();
+        zoomSlider.setOrientation(Orientation.VERTICAL);
         zoomSlider.setMin(0);
         zoomSlider.setMax(1);
 
         mapTypeChoiceBox = new ChoiceBox<MapViewer.MapType>();
         mapTypeChoiceBox.getItems().addAll(MapType.values());
 
+        progressBar = new ProgressBar();
+        progressBar.setPrefSize(PROGESS_BAR_DIMENSION.width, PROGESS_BAR_DIMENSION.height);
+
         bottomPanel = new BorderPane();
-        bottomPanel.setCenter(zoomSlider);
         bottomPanel.setRight(mapTypeChoiceBox);
+
+        leftPanel = new BorderPane();
+        leftPanel.setCenter(zoomSlider);
 
         anchorPane = new AnchorPane();
 
-        anchorPane.getChildren().addAll(webView, topPanel, bottomPanel);
+        anchorPane.getChildren().addAll(webView, topPanel, leftPanel, bottomPanel, progressBar);
 
-        AnchorPane.setTopAnchor(topPanel, 8.0);
-        AnchorPane.setRightAnchor(topPanel, 5.0);
-        AnchorPane.setLeftAnchor(topPanel, 5.0);
+        AnchorPane.setTopAnchor(topPanel, 10.0);
+        AnchorPane.setRightAnchor(topPanel, 10.0);
+        AnchorPane.setLeftAnchor(topPanel, 10.0);
 
         AnchorPane.setTopAnchor(webView, 0.0);
         AnchorPane.setLeftAnchor(webView, 0.0);
         AnchorPane.setBottomAnchor(webView, 0.0);
         AnchorPane.setRightAnchor(webView, 0.0);
 
-        AnchorPane.setBottomAnchor(bottomPanel, 8.0);
-        AnchorPane.setRightAnchor(bottomPanel, 5.0);
-        AnchorPane.setLeftAnchor(bottomPanel, 5.0);
+        AnchorPane.setTopAnchor(leftPanel, 50.0);
+        AnchorPane.setLeftAnchor(leftPanel, 10.0);
+        AnchorPane.setBottomAnchor(leftPanel, 50.0);
+
+        AnchorPane.setLeftAnchor(progressBar, 10.0);
+        AnchorPane.setBottomAnchor(progressBar, 10.0);
+
+        AnchorPane.setBottomAnchor(bottomPanel, 10.0);
+        AnchorPane.setRightAnchor(bottomPanel, 10.0);
+        AnchorPane.setLeftAnchor(bottomPanel, 10.0);
 
         root = new BorderPane();
         root.setCenter(anchorPane);
@@ -84,12 +105,16 @@ class MapViewSkin implements Skin<MapView> {
         animationTimeline = new Timeline(500);
         animationTimeline.getKeyFrames().addAll(
                 new KeyFrame(Duration.ZERO,
+                        new KeyValue(progressBar.opacityProperty(), 0.9, Interpolator.EASE_BOTH),
                         new KeyValue(topPanel.opacityProperty(), 0.9, Interpolator.EASE_BOTH),
+                        new KeyValue(leftPanel.opacityProperty(), 0.9, Interpolator.EASE_BOTH),
                         new KeyValue(bottomPanel.opacityProperty(), 0.9, Interpolator.EASE_BOTH)
 
                 ),
                 new KeyFrame(new Duration(500),
+                        new KeyValue(progressBar.opacityProperty(), 0.2, Interpolator.EASE_BOTH),
                         new KeyValue(topPanel.opacityProperty(), 0.2, Interpolator.EASE_BOTH),
+                        new KeyValue(leftPanel.opacityProperty(), 0.2, Interpolator.EASE_BOTH),
                         new KeyValue(bottomPanel.opacityProperty(), 0.2, Interpolator.EASE_BOTH)
                 )
                 );
@@ -105,6 +130,7 @@ class MapViewSkin implements Skin<MapView> {
         if (areChoiceBoxShowing()) {
             return;
         }
+        animationTimeline.stop();
         if (visible) {
             animationTimeline.setCycleCount(2);
             animationTimeline.setAutoReverse(true);
@@ -147,5 +173,9 @@ class MapViewSkin implements Skin<MapView> {
 
     protected ChoiceBox<MapProvider> getMapProviderChoiceBox() {
         return mapProviderChoiceBox;
+    }
+
+    protected ProgressIndicator getProgressIndicator() {
+        return progressBar;
     }
 }
