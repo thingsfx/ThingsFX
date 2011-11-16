@@ -36,6 +36,8 @@ public class SwingFX {
      * {@link SwingView}.
      */
     public static void init() {
+        System.setProperty("swing.volatileImageBufferEnabled", "false");
+        System.setProperty("awt.nativeDoubleBuffering", "true");
         new JFXPanel(); // needed as a trick to launch it on a mac
         Class<KeyboardFocusManager> kfmCls = KeyboardFocusManager.class;
         Field peer;

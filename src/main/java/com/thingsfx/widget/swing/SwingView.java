@@ -195,6 +195,9 @@ public class SwingView extends Control {
 
                 JComponent component = SwingView.this.component;
                 proxy = new ProxyWindow(SwingView.this);
+                proxy.setForeground(component.getForeground());
+                proxy.setBackground(component.getBackground());
+                proxy.setFont(component.getFont());
                 proxy.add(component);
                 component.addNotify();
 

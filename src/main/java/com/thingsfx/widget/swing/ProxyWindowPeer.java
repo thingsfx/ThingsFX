@@ -20,6 +20,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.PaintEvent;
+import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
@@ -89,7 +90,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public void setOpaque(boolean isOpaque) {
-        throw new UnsupportedOperationException();
+        // Noop.
     }
 
     @Override
@@ -241,8 +242,12 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public Graphics getGraphics() {
-        return new ProxyGraphics(window.getProxyView(), (Graphics2D)
+        ProxyGraphics g = new ProxyGraphics(window.getProxyView(), (Graphics2D)
                         window.getProxyView().getBackBuffer().getGraphics());
+        g.setColor(window.getForeground());
+        g.setBackground(window.getBackground());
+        g.setFont(window.getFont());
+        return g;
     }
 
     @Override
@@ -257,17 +262,17 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public void setForeground(Color c) {
-        throw new UnsupportedOperationException();
+        // Noop.
     }
 
     @Override
     public void setBackground(Color c) {
-        throw new UnsupportedOperationException();
+        // Noop.
     }
 
     @Override
     public void setFont(Font f) {
-        throw new UnsupportedOperationException();
+        // Noop.
     }
 
     @Override
@@ -315,7 +320,7 @@ class ProxyWindowPeer implements FramePeer {
 
     @Override
     public Image createImage(int width, int height) {
-        throw new UnsupportedOperationException();
+        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 
     @Override
