@@ -162,9 +162,7 @@ public class SwingView extends Control {
 
         this.component = comp;
 
-        imgView = new BufferedImageView() {
-    	    
-    	};
+        imgView = new BufferedImageView();
     	getChildren().add(imgView);
 
         registerEvents();
