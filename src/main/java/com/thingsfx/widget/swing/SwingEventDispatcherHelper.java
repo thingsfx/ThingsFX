@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 
 import javax.swing.JComponent;
 
-public class SwingFXEventDispatcher {
+class SwingEventDispatcherHelper {
     
     private static final long MOUSE_MASK = AWTEvent.MOUSE_EVENT_MASK |
                                            AWTEvent.MOUSE_MOTION_EVENT_MASK |
