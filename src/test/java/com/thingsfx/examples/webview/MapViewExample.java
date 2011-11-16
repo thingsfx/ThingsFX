@@ -17,6 +17,7 @@ public class MapViewExample extends Application {
         MapView mapView = new MapView("Barcelona", 0.2);
         Scene scene = new Scene(mapView, 500, 400);
         stage.setScene(scene);
+        stage.setResizable(true);
         stage.show();
     }
 
