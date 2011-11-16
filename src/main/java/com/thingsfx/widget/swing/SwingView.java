@@ -201,7 +201,6 @@ public class SwingView extends Control {
 
                 SwingFXEventDispatcher.setLightweightDispatcher(component);
                 component.setVisible(true);
-                component.setDoubleBuffered(true);
                 component.doLayout();
                 component.repaint();
             }
@@ -249,7 +248,7 @@ public class SwingView extends Control {
         return component.getPreferredSize().getHeight();
     }
 
-    public void commit() {
+    public synchronized void commit() {
 
         if (painterTaskFuture != null) {
           painterTaskFuture.cancel(false);
