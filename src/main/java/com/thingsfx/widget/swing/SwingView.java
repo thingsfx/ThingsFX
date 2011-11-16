@@ -86,7 +86,7 @@ public class SwingView extends Control {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    SwingFXEventDispatcher.dispatchEvent(awtEvent, component);
+                    SwingEventDispatcherHelper.dispatchEvent(awtEvent, component);
                 }
             });
         }
@@ -152,10 +152,11 @@ public class SwingView extends Control {
 
     private BufferedImage backBuffer;
 
-    private static ScheduledExecutorService painterTimer = Executors.newScheduledThreadPool(1);
+    private static ScheduledExecutorService painterTimer =
+            Executors.newScheduledThreadPool(1);
 
     private Runnable painterTask = new PainterTask();
-    private ScheduledFuture painterTaskFuture;
+    private ScheduledFuture<?> painterTaskFuture;
 
     public SwingView(JComponent comp) {
 
@@ -199,7 +200,7 @@ public class SwingView extends Control {
                 proxy.add(component);
                 component.addNotify();
 
-                SwingFXEventDispatcher.setLightweightDispatcher(component);
+                SwingEventDispatcherHelper.setLightweightDispatcher(component);
                 component.setVisible(true);
                 component.doLayout();
                 component.repaint();
@@ -258,8 +259,12 @@ public class SwingView extends Control {
     }
 
     BufferedImage getBackBuffer() {
-        if (backBuffer == null || backBuffer.getWidth() < component.getWidth() || backBuffer.getHeight() < component.getHeight()) {
-            backBuffer = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        if (backBuffer == null || backBuffer.getWidth() < component.getWidth() ||
+            backBuffer.getHeight() < component.getHeight())
+        {
+            backBuffer = new BufferedImage(component.getWidth(),
+                                           component.getHeight(),
+                                           BufferedImage.TYPE_INT_ARGB);
         }
         return backBuffer;
     }
