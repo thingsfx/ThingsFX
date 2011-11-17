@@ -5,39 +5,60 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.LineBuilder;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextBuilder;
 
 public class ResetableTextFieldSkin implements Skin<ResetableTextField> {
 
-    ResetableTextField control;
+    protected static final int RESET_BUTTON_CROSS_WIDTH = 6;
+    protected static final int RESET_BUTTON_CROSS_LINE_WIDTH = 2;
+    protected static final double RESET_BUTTON_OPACITY_UNHOVERED = 0.60;
+    protected static final double RESET_BUTTON_OPACITY_HOVERED = 0.75;
+    protected static final double RESET_BUTTON_OPACITY_CLICKED = 1.0;
+
+    private ResetableTextField control;
     private AnchorPane anchorPane;
+    private AnchorPane resetButtonPane;
     private TextField textField;
     private Shape resetButton;
-    private Shape resetButtonText;
+    private Shape resetButtonCrossPart1;
+    private Shape resetButtonCrossPart2;
 
     public ResetableTextFieldSkin(ResetableTextField control) {
         this.control = control;
         anchorPane = new AnchorPane();
         textField = new TextField();
-        resetButton = RectangleBuilder.create().fill(Color.GREY).opacity(0.5).width(13).height(13).arcWidth(5).arcHeight(5).build();
-        resetButtonText = TextBuilder.create().fill(Color.WHITE).opacity(1).text("X").font(new Font(10)).build();
-        resetButtonText.setMouseTransparent(true);
+        resetButton = RectangleBuilder.create().fill(new Color(0.3, 0.3, 0.3, 1)).opacity(RESET_BUTTON_OPACITY_UNHOVERED).width(13).height(13).arcWidth(5)
+                .arcHeight(5).build();
 
-        anchorPane.getChildren().addAll(textField, resetButton, resetButtonText);
+        resetButtonCrossPart1 = LineBuilder.create().stroke(Color.WHITE).strokeWidth(RESET_BUTTON_CROSS_LINE_WIDTH).startX(0).startY(0)
+                .endX(RESET_BUTTON_CROSS_WIDTH).endY(RESET_BUTTON_CROSS_WIDTH).build();
+        resetButtonCrossPart2 = LineBuilder.create().stroke(Color.WHITE).strokeWidth(RESET_BUTTON_CROSS_LINE_WIDTH).startX(0).startY(RESET_BUTTON_CROSS_WIDTH)
+                .endX(RESET_BUTTON_CROSS_WIDTH).endY(0).build();
+
+        resetButtonPane = new AnchorPane();
+        resetButtonPane.getChildren().addAll(resetButton, resetButtonCrossPart1, resetButtonCrossPart2);
+        resetButtonPane.setOpacity(RESET_BUTTON_OPACITY_UNHOVERED);
+
+        AnchorPane.setTopAnchor(resetButton, 0.0);
+        AnchorPane.setRightAnchor(resetButton, 0.0);
+
+        AnchorPane.setTopAnchor(resetButtonCrossPart1, 2.0);
+        AnchorPane.setLeftAnchor(resetButtonCrossPart1, 2.0);
+
+        AnchorPane.setTopAnchor(resetButtonCrossPart2, 2.0);
+        AnchorPane.setLeftAnchor(resetButtonCrossPart2, 2.0);
+
+        anchorPane.getChildren().addAll(textField, resetButtonPane);
 
         AnchorPane.setTopAnchor(textField, 0.0);
         AnchorPane.setLeftAnchor(textField, 0.0);
         AnchorPane.setBottomAnchor(textField, 0.0);
         AnchorPane.setRightAnchor(textField, 0.0);
 
-        AnchorPane.setTopAnchor(resetButton, 4.5);
-        AnchorPane.setRightAnchor(resetButton, 4.5);
-
-        AnchorPane.setTopAnchor(resetButtonText, 5.0);
-        AnchorPane.setRightAnchor(resetButtonText, 8.0);
+        AnchorPane.setTopAnchor(resetButtonPane, 4.5);
+        AnchorPane.setRightAnchor(resetButtonPane, 4.5);
 
     }
 
@@ -59,12 +80,7 @@ public class ResetableTextFieldSkin implements Skin<ResetableTextField> {
         return textField;
     }
 
-    protected Shape getResetButton() {
-        return resetButton;
+    protected AnchorPane getResetButton() {
+        return resetButtonPane;
     }
-
-    protected Shape getResetButtonText() {
-        return resetButtonText;
-    }
-
 }

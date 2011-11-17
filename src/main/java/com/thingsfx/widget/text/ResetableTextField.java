@@ -5,6 +5,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class ResetableTextField extends TextField {
@@ -44,16 +46,26 @@ public class ResetableTextField extends TextField {
 
             @Override
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-                skin.getResetButtonText().setVisible(!arg2.isEmpty());
                 skin.getResetButton().setVisible(!arg2.isEmpty());
+            }
+        });
+
+        skin.getTextField().setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                    skin.getTextField().clear();
+                }
             }
         });
 
         skin.getResetButton().hoverProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
-            public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-                skin.getResetButton().setOpacity(arg2 ? 0.7 : 0.5);
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean hovered) {
+                skin.getResetButton().setOpacity(
+                        hovered ? ResetableTextFieldSkin.RESET_BUTTON_OPACITY_HOVERED : ResetableTextFieldSkin.RESET_BUTTON_OPACITY_UNHOVERED);
                 skin.getResetButton().setCursor(Cursor.DEFAULT);
             }
 
@@ -62,7 +74,7 @@ public class ResetableTextField extends TextField {
 
             @Override
             public void handle(MouseEvent arg0) {
-                skin.getResetButton().setOpacity(1);
+                skin.getResetButton().setOpacity(ResetableTextFieldSkin.RESET_BUTTON_OPACITY_CLICKED);
             }
         });
 
@@ -70,7 +82,7 @@ public class ResetableTextField extends TextField {
 
             @Override
             public void handle(MouseEvent arg0) {
-                skin.getResetButton().setOpacity(0.7);
+                skin.getResetButton().setOpacity(ResetableTextFieldSkin.RESET_BUTTON_OPACITY_HOVERED);
                 skin.getTextField().clear();
             }
         });
