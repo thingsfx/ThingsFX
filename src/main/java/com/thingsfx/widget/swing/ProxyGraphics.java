@@ -29,9 +29,9 @@ import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.RenderingHints.Key;
 import java.awt.Shape;
 import java.awt.Stroke;
-import java.awt.RenderingHints.Key;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
@@ -43,7 +43,9 @@ import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 import java.util.Map;
 
-class ProxyGraphics extends Graphics2D {
+import sun.awt.ConstrainableGraphics;
+
+class ProxyGraphics extends Graphics2D implements ConstrainableGraphics {
 
     private SwingView swingView;
 
@@ -57,41 +59,50 @@ class ProxyGraphics extends Graphics2D {
     @Override
     public void draw3DRect(int x, int y, int width, int height, boolean raised) {
         proxy.draw3DRect(x, y, width, height, raised);
+        commit();
     }
     
     @Override
     public void drawBytes(byte[] data, int offset, int length, int x, int y) {
         proxy.drawBytes(data, offset, length, x, y);
+        commit();
     }
     
     @Override
     public void drawChars(char[] data, int offset, int length, int x, int y) {
         proxy.drawChars(data, offset, length, x, y);
+        commit();
     }
     
     @Override
     public Graphics create(int x, int y, int width, int height) {
-        return proxy.create(x, y, width, height);
+        Graphics2D copy = (Graphics2D) proxy.create(x, y, width, height);
+        ProxyGraphics graphics = new ProxyGraphics(swingView, copy);
+        return graphics;
     }
     
     @Override
     public void drawPolygon(Polygon p) {
         proxy.drawPolygon(p);
+        commit();
     }
     
     @Override
     public void fill3DRect(int x, int y, int width, int height, boolean raised) {
         proxy.fill3DRect(x, y, width, height, raised);
+        commit();
     }
     
     @Override
     public void drawRect(int x, int y, int width, int height) {
         proxy.drawRect(x, y, width, height);
+        commit();
     }
     
     @Override
     public void fillPolygon(Polygon p) {
        proxy.fillPolygon(p);
+       commit();
     }
     
     @Override
@@ -517,5 +528,14 @@ class ProxyGraphics extends Graphics2D {
 
     private void commit() {
         swingView.commit();
+    }
+
+    @Override
+    public void constrain(int x, int y, int w, int h) {
+        if (proxy instanceof ConstrainableGraphics) {
+            ((ConstrainableGraphics) proxy).constrain(x, y, w, h);
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 }
