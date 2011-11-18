@@ -11,44 +11,24 @@ import javafx.scene.shape.Shape;
 
 public class ResetableTextFieldSkin implements Skin<ResetableTextField> {
 
-    protected static final int RESET_BUTTON_CROSS_WIDTH = 6;
-    protected static final int RESET_BUTTON_CROSS_LINE_WIDTH = 2;
     protected static final double RESET_BUTTON_OPACITY_UNHOVERED = 0.60;
     protected static final double RESET_BUTTON_OPACITY_HOVERED = 0.75;
     protected static final double RESET_BUTTON_OPACITY_CLICKED = 1.0;
 
     private ResetableTextField control;
     private AnchorPane anchorPane;
-    private AnchorPane resetButtonPane;
     private TextField textField;
+    private AnchorPane resetButtonPane;
     private Shape resetButton;
     private Shape resetButtonCrossPart1;
     private Shape resetButtonCrossPart2;
 
     public ResetableTextFieldSkin(ResetableTextField control) {
         this.control = control;
+
         anchorPane = new AnchorPane();
         textField = new TextField();
-        resetButton = RectangleBuilder.create().fill(new Color(0.3, 0.3, 0.3, 1)).opacity(RESET_BUTTON_OPACITY_UNHOVERED).width(13).height(13).arcWidth(5)
-                .arcHeight(5).build();
-
-        resetButtonCrossPart1 = LineBuilder.create().stroke(Color.WHITE).strokeWidth(RESET_BUTTON_CROSS_LINE_WIDTH).startX(0).startY(0)
-                .endX(RESET_BUTTON_CROSS_WIDTH).endY(RESET_BUTTON_CROSS_WIDTH).build();
-        resetButtonCrossPart2 = LineBuilder.create().stroke(Color.WHITE).strokeWidth(RESET_BUTTON_CROSS_LINE_WIDTH).startX(0).startY(RESET_BUTTON_CROSS_WIDTH)
-                .endX(RESET_BUTTON_CROSS_WIDTH).endY(0).build();
-
         resetButtonPane = new AnchorPane();
-        resetButtonPane.getChildren().addAll(resetButton, resetButtonCrossPart1, resetButtonCrossPart2);
-        resetButtonPane.setOpacity(RESET_BUTTON_OPACITY_UNHOVERED);
-
-        AnchorPane.setTopAnchor(resetButton, 0.0);
-        AnchorPane.setRightAnchor(resetButton, 0.0);
-
-        AnchorPane.setTopAnchor(resetButtonCrossPart1, 2.0);
-        AnchorPane.setLeftAnchor(resetButtonCrossPart1, 2.0);
-
-        AnchorPane.setTopAnchor(resetButtonCrossPart2, 2.0);
-        AnchorPane.setLeftAnchor(resetButtonCrossPart2, 2.0);
 
         anchorPane.getChildren().addAll(textField, resetButtonPane);
 
@@ -56,10 +36,49 @@ public class ResetableTextFieldSkin implements Skin<ResetableTextField> {
         AnchorPane.setLeftAnchor(textField, 0.0);
         AnchorPane.setBottomAnchor(textField, 0.0);
         AnchorPane.setRightAnchor(textField, 0.0);
+    }
 
-        AnchorPane.setTopAnchor(resetButtonPane, 4.5);
-        AnchorPane.setRightAnchor(resetButtonPane, 4.5);
+    protected void installResetButton(double buttonHeight) {
+        // Starting with the values for standard height of 22.0, formulas found out empirically to give a good scaling effect
+        final double internalCrossPadding = buttonHeight / 6.0;
+        final double crossLineWidth = internalCrossPadding;
+        final double arc = buttonHeight / 2.5;
+        final double crossWidth = buttonHeight - (internalCrossPadding * 2 + crossLineWidth * Math.sqrt(2));
 
+        resetButtonPane.getChildren().clear();
+
+        resetButton = RectangleBuilder.create()
+                .fill(new Color(0.3, 0.3, 0.3, 1))
+                .opacity(RESET_BUTTON_OPACITY_UNHOVERED)
+                .width(buttonHeight).height(buttonHeight)
+                .arcWidth(arc).arcHeight(arc)
+                .build();
+
+        resetButtonCrossPart1 = LineBuilder.create()
+                .stroke(Color.WHITE)
+                .strokeWidth(crossLineWidth)
+                .startX(0).startY(0)
+                .endX(crossWidth).endY(crossWidth)
+                .build();
+
+        resetButtonCrossPart2 = LineBuilder.create()
+                .stroke(Color.WHITE)
+                .strokeWidth(crossLineWidth)
+                .startX(0).startY(crossWidth)
+                .endX(crossWidth).endY(0)
+                .build();
+
+        resetButtonPane.getChildren().addAll(resetButton, resetButtonCrossPart1, resetButtonCrossPart2);
+        resetButtonPane.setOpacity(RESET_BUTTON_OPACITY_UNHOVERED);
+
+        AnchorPane.setTopAnchor(resetButton, 0.0);
+        AnchorPane.setRightAnchor(resetButton, 0.0);
+
+        AnchorPane.setTopAnchor(resetButtonCrossPart1, internalCrossPadding);
+        AnchorPane.setLeftAnchor(resetButtonCrossPart1, internalCrossPadding);
+
+        AnchorPane.setTopAnchor(resetButtonCrossPart2, internalCrossPadding);
+        AnchorPane.setLeftAnchor(resetButtonCrossPart2, internalCrossPadding);
     }
 
     @Override

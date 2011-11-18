@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class ResetableTextField extends TextField {
 
@@ -70,6 +71,7 @@ public class ResetableTextField extends TextField {
             }
 
         });
+
         skin.getResetButton().setOnMousePressed(new EventHandler<MouseEvent>() {
 
             @Override
@@ -84,6 +86,18 @@ public class ResetableTextField extends TextField {
             public void handle(MouseEvent arg0) {
                 skin.getResetButton().setOpacity(ResetableTextFieldSkin.RESET_BUTTON_OPACITY_HOVERED);
                 skin.getTextField().clear();
+            }
+        });
+
+        skin.getTextField().heightProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                // Starting with padding = 4 for height = 22, formula found out empirically to give a good scaling effect
+                final double resetButtonPadding = (arg2.doubleValue() / 22.0) + 3.0;
+                skin.installResetButton(arg2.doubleValue() - resetButtonPadding * 2);
+                AnchorPane.setTopAnchor(skin.getResetButton(), resetButtonPadding);
+                AnchorPane.setRightAnchor(skin.getResetButton(), resetButtonPadding);
             }
         });
     }
