@@ -143,7 +143,7 @@ public class SwingView extends Control {
         
     }
 
-    private static final long COMMIT_DELAY = 50;
+    private static final long COMMIT_DELAY = 30;
 
     private JComponent component;
 
