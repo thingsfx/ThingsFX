@@ -37,7 +37,15 @@ public class SwingFX {
      */
     public static void init() {
         System.setProperty("swing.volatileImageBufferEnabled", "false");
-        System.setProperty("awt.nativeDoubleBuffering", "true");
+        
+        // workaround for Mac OS X JDK that cast Graphics to SunGraphics2D
+        // internally, not painting our components
+        String enableNativeBuffering = "true";
+        if (System.getProperty("os.name").contains("Mac")) {            
+            enableNativeBuffering = "false";
+        }
+        System.setProperty("awt.nativeDoubleBuffering", enableNativeBuffering);
+        
         new JFXPanel(); // needed as a trick to launch it on a mac
         Class<KeyboardFocusManager> kfmCls = KeyboardFocusManager.class;
         Field peer;
