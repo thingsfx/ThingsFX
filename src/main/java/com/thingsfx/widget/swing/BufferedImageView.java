@@ -18,16 +18,10 @@
 package com.thingsfx.widget.swing;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import javax.imageio.ImageIO;
 
 /**
  * An {@link ImageView} that is able to render {@link BufferedImage}s.
@@ -41,27 +35,14 @@ public class BufferedImageView extends ImageView {
     }
     
     public void paintImage(BufferedImage backBuffer) {
-        try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(backBuffer, "png", os);
-            os.close();
-            final InputStream is = new ByteArrayInputStream(os.toByteArray());
-            Platform.runLater(new Runnable() {
+        final Image img = Image.impl_fromExternalImage(backBuffer);
+        Platform.runLater(new Runnable() {
 
-                @Override
-                public void run() {
-                    setImage(new Image(is));
-                    try {
-                      is.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                
-            });
-            
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+            @Override
+            public void run() {
+                setImage(img);
+            }
+
+        });
     }
 }
