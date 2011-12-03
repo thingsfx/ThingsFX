@@ -47,14 +47,19 @@ class SwingEventDispatcherHelper {
             
             Class<?> dispatcherCls = Class.forName("java.awt.LightweightDispatcher");
             newLightweightDispatcher =
-                    dispatcherCls.getDeclaredConstructor(new Class[] { Container.class });
+                    dispatcherCls.getDeclaredConstructor(new Class[] { 
+                                                            Container.class
+                                                         });
             newLightweightDispatcher.setAccessible(true);
             
-            dispatchMethod = dispatcherCls.getDeclaredMethod("dispatchEvent", AWTEvent.class);
+            dispatchMethod = dispatcherCls.getDeclaredMethod("dispatchEvent",
+                                                             AWTEvent.class);
             dispatchMethod.setAccessible(true);
-            
-            enableEvents =
-                    dispatcherCls.getDeclaredMethod("enableEvents", new Class[] { long.class });
+
+            enableEvents = dispatcherCls.getDeclaredMethod("enableEvents",
+                                                           new Class[] {
+                                                                long.class
+                                                           });
             enableEvents.setAccessible(true);
             
         } catch (Exception ex) {

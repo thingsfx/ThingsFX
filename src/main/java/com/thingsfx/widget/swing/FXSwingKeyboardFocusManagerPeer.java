@@ -1,3 +1,20 @@
+/*
+ * This file is part of ThingsFX.
+ *
+ * ThingsFX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ThingsFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ThingsFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.thingsfx.widget.swing;
 
 import java.awt.AWTEvent;
@@ -15,7 +32,8 @@ import sun.awt.SunToolkit;
 
 class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
 
-    private static Logger log = Logger.getLogger(FXSwingKeyboardFocusManagerPeer.class.getName());
+    private static Logger log =
+            Logger.getLogger(FXSwingKeyboardFocusManagerPeer.class.getName());
 
     private static FXSwingKeyboardFocusManagerPeer instance;
 
@@ -26,8 +44,7 @@ class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
         return instance;
     }
 
-    private FXSwingKeyboardFocusManagerPeer() {
-    }
+    private FXSwingKeyboardFocusManagerPeer() { /* nothing to do */ }
 
     private Window currentFocusedWindow;
     private Component currentFocusOwner;
@@ -101,19 +118,25 @@ class FXSwingKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
         return false;
     }
 
+    @SuppressWarnings("restriction")
     private void postEvent(AWTEvent ev) {
         SunToolkit.postEvent(AppContext.getAppContext(), ev);
     }
 
     void focusGained(ProxyWindow w) {
         log.fine("Focus gained: " + w);
-        FocusEvent fg = new CausedFocusEvent(w, FocusEvent.FOCUS_GAINED, false, currentFocusOwner, Cause.NATIVE_SYSTEM);
+        @SuppressWarnings("restriction")
+        FocusEvent fg = new CausedFocusEvent(w, FocusEvent.FOCUS_GAINED, false,
+                                             currentFocusOwner,
+                                             Cause.NATIVE_SYSTEM);
         postEvent(fg);
     }
 
     void focusLost(ProxyWindow w) {
         log.fine("Focus lost: " + w);
-        FocusEvent fl = new CausedFocusEvent(w, FocusEvent.FOCUS_LOST, false, null, Cause.NATIVE_SYSTEM);
+        @SuppressWarnings("restriction")
+        FocusEvent fl = new CausedFocusEvent(w, FocusEvent.FOCUS_LOST, false,
+                                             null, Cause.NATIVE_SYSTEM);
         postEvent(fl);
     }
 

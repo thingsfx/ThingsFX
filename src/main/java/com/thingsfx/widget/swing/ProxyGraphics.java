@@ -45,6 +45,7 @@ import java.util.Map;
 
 import sun.awt.ConstrainableGraphics;
 
+@SuppressWarnings("restriction")
 class ProxyGraphics extends Graphics2D implements ConstrainableGraphics {
 
     private SwingView swingView;
@@ -110,6 +111,7 @@ class ProxyGraphics extends Graphics2D implements ConstrainableGraphics {
         return proxy.getClipBounds(r);
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public Rectangle getClipRect() {
         return proxy.getClipRect();

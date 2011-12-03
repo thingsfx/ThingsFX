@@ -1,3 +1,20 @@
+/*
+ * This file is part of ThingsFX.
+ *
+ * ThingsFX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ThingsFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ThingsFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.thingsfx.widget.swing;
 
 import java.awt.Component;
@@ -10,6 +27,7 @@ import java.security.PrivilegedExceptionAction;
 
 import sun.awt.CausedFocusEvent;
 
+@SuppressWarnings("restriction")
 class KFMHelper {
 
     static final int SNFH_FAILURE = 0;
@@ -28,9 +46,9 @@ class KFMHelper {
     {
         try {
             if (processSynchronousLightweightTransferMethod == null) {
-                processSynchronousLightweightTransferMethod = (Method) AccessController
-                        .doPrivileged(new PrivilegedExceptionAction() {
-                            public Object run() throws IllegalAccessException,
+                processSynchronousLightweightTransferMethod = AccessController
+                        .doPrivileged(new PrivilegedExceptionAction<Method>() {
+                            public Method run() throws IllegalAccessException,
                                     NoSuchMethodException {
                                 Method m = KeyboardFocusManager.class
                                         .getDeclaredMethod(
@@ -73,7 +91,7 @@ class KFMHelper {
                                               CausedFocusEvent.Cause cause)
     {
         if (shouldNativelyFocusHeavyweightMethod == null) {
-            Class[] arg_types = new Class[] {
+            Class<?>[] arg_types = new Class<?>[] {
                     Component.class, Component.class,
                     Boolean.TYPE, Boolean.TYPE, Long.TYPE,
                     CausedFocusEvent.Cause.class

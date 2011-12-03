@@ -35,6 +35,7 @@ import javafx.stage.Window;
 import sun.awt.CausedFocusEvent.Cause;
 import sun.java2d.pipe.Region;
 
+@SuppressWarnings("restriction")
 class ProxyWindowPeer implements FramePeer {
 
     private ProxyWindow window;

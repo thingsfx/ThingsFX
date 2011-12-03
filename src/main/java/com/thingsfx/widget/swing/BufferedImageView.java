@@ -35,14 +35,14 @@ public class BufferedImageView extends ImageView {
     }
     
     public void paintImage(BufferedImage backBuffer) {
+        // use the internal API until we get a better alternative
+        @SuppressWarnings("deprecation")
         final Image img = Image.impl_fromExternalImage(backBuffer);
         Platform.runLater(new Runnable() {
-
             @Override
             public void run() {
                 setImage(img);
             }
-
         });
     }
 }

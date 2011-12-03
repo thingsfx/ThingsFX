@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import com.thingsfx.widget.swing.SwingFX;
 import com.thingsfx.widget.swing.SwingView;
@@ -25,6 +26,8 @@ public class SimpleSwingFXApplication extends Application {
     
     public static void main(String[] args) {
         SwingFX.init();
+        
+        System.err.println(System.getProperty("java.version"));
         launch(args);
     }
 

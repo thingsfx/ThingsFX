@@ -43,6 +43,11 @@ import javafx.scene.input.MouseButton;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+/**
+ * A {@link Control} that allows embedding of Swing widgets.
+ * Before using this control, {@link SwingFX#init()} must be called before
+ * initializing the graphics state.
+ */
 public class SwingView extends Control {
 
     private static final Map<EventType<?>, Integer> mouseEventMap;
@@ -134,13 +139,11 @@ public class SwingView extends Control {
     }
 
     private class PainterTask implements Runnable {
-
         @Override
         public void run() {
             getImageView().paintImage(getBackBuffer());
             painterTaskFuture = null;
         }
-        
     }
 
     private static final long COMMIT_DELAY = 30;
@@ -159,7 +162,11 @@ public class SwingView extends Control {
     private ScheduledFuture<?> painterTaskFuture;
 
     public SwingView(JComponent comp) {
-
+        
+        if (!SwingFX.isInitialized()) {
+            throw new InternalError("SwingFX.init() must be called before");
+        }
+        
         this.component = comp;
 
         imgView = new BufferedImageView();
@@ -176,8 +183,10 @@ public class SwingView extends Control {
 
                     @Override
                     public void run() {
-                        proxy.setSize((int) newVal.getWidth(), (int) newVal.getHeight());
-                        component.setSize((int) newVal.getWidth(), (int) newVal.getHeight());
+                        proxy.setSize((int) newVal.getWidth(),
+                                      (int) newVal.getHeight());
+                        component.setSize((int) newVal.getWidth(),
+                                          (int) newVal.getHeight());
                         component.validate();
                     }
                     
@@ -227,7 +236,8 @@ public class SwingView extends Control {
             public void changed(ObservableValue<? extends Boolean> arg0,
                     Boolean oldValue, Boolean newValue) {
                 if (newValue == Boolean.FALSE) {
-                    FocusEvent fl = new FocusEvent(component, FocusEvent.FOCUS_LOST);
+                    FocusEvent fl = new FocusEvent(component,
+                                                   FocusEvent.FOCUS_LOST);
                     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(fl);
                 }
             }
@@ -256,7 +266,8 @@ public class SwingView extends Control {
           painterTaskFuture.cancel(false);
         }
 
-        painterTaskFuture = painterTimer.schedule(painterTask, COMMIT_DELAY, TimeUnit.MILLISECONDS);
+        painterTaskFuture = painterTimer.schedule(painterTask, COMMIT_DELAY,
+                                                  TimeUnit.MILLISECONDS);
     }
 
     BufferedImage getBackBuffer() {

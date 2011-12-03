@@ -5,7 +5,10 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
 import com.thingsfx.widget.swing.SwingFX;
@@ -61,18 +64,19 @@ public class MultipleSwingViews extends Application {
                 textField1.setPreferredSize(new Dimension(100, 30));
                 textField1.setSize(new Dimension(100, 30));
                 textField1.setText("I lost focus!");
+
+                JScrollPane scrollPane = new JScrollPane();
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
                 
-                JTextField textField2 = new JTextField();
-                textField2.setMinimumSize(new Dimension(100, 30));
-                textField2.setPreferredSize(new Dimension(100, 30));
-                textField2.setSize(new Dimension(100, 30));
-                textField2.setText("I have focus!");
-                
-                swingPane1.add(textField1);
-                swingPane2.add(textField2);
+                JTextArea textArea = new JTextArea();
+                textArea.setText("I have focus!");
+                scrollPane.setViewportView(textArea);
+
+                swingPane1.add(textField1);                
+                swingPane2.add(scrollPane);
                 
                 swingPane1.setSize(swingPane1.getPreferredSize());
-                swingPane2.setSize(swingPane2.getPreferredSize());
+                swingPane2.setSize(new Dimension(200, 200));
                 
                 swingPane1.setVisible(true);
                 swingPane2.setVisible(true);
